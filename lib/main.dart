@@ -7,7 +7,7 @@ import 'package:screen_reader/routes/app_routes.dart';
 import 'package:screen_reader/views/after_login/home_screen.dart';
 import 'package:screen_reader/views/after_login/library_screen.dart';
 import 'package:screen_reader/views/after_login/plater_screen.dart';
-import 'package:screen_reader/views/after_login/profile_screen.dart';
+import 'package:screen_reader/views/after_login/account/profile_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
