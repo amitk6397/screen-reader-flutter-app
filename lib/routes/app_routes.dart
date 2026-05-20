@@ -7,4 +7,6 @@ class AppRoutes {
 
   // after auth routes
   static const String mySheel = '/mySheel';
+
+  static const String bookReader = '/bookReader';
 }

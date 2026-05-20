@@ -1,127 +1,120 @@
-import 'dart:ui';
-
-import 'package:get/get.dart';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
+
+import 'package:flutter/material.dart';
 
 enum TtsState { playing, paused, stopped }
 
 class ScreenReaderController extends GetxController {
   final FlutterTts _tts = FlutterTts();
 
-  // Reactive variables
-  final Rx<TtsState> _state = TtsState.stopped.obs;
-  final RxDouble _speechRate = 0.5.obs;
-  final RxDouble _pitch = 1.0.obs;
-  final RxDouble _volume = 1.0.obs;
-  final RxString _language = 'en-US'.obs;
-  final RxString _currentText = ''.obs;
-  final RxInt _currentWordStart = 0.obs;
-  final RxInt _currentWordEnd = 0.obs;
+  // ── Observables ────────────────────────────────────────────────────────────
+  final Rx<TtsState> state = TtsState.stopped.obs;
+  final RxDouble speechRate = 0.5.obs;
+  final RxDouble pitch = 1.0.obs;
+  final RxDouble volume = 1.0.obs;
+  final RxString language = 'en-US'.obs;
+  final RxString currentText = ''.obs;
+  final RxInt currentWordStart = 0.obs;
+  final RxInt currentWordEnd = 0.obs;
+  final RxList<String> availableLanguages = <String>[].obs;
 
-  // Getters
-  TtsState get state => _state.value;
-  double get speechRate => _speechRate.value;
-  double get pitch => _pitch.value;
-  double get volume => _volume.value;
-  String get language => _language.value;
-  String get currentText => _currentText.value;
-  int get currentWordStart => _currentWordStart.value;
-  int get currentWordEnd => _currentWordEnd.value;
+  // ── Computed helpers ───────────────────────────────────────────────────────
+  bool get isPlaying => state.value == TtsState.playing;
+  bool get isPaused  => state.value == TtsState.paused;
+  bool get isStopped => state.value == TtsState.stopped;
 
-  bool get isPlaying => _state.value == TtsState.playing;
-  bool get isPaused => _state.value == TtsState.paused;
-  bool get isStopped => _state.value == TtsState.stopped;
-
-  // Reactive getters for UI
-  RxBool get isPlayingRx => RxBool(isPlaying);
-  RxBool get isStoppedRx => RxBool(isStopped);
-
+  // ── Lifecycle ──────────────────────────────────────────────────────────────
   @override
   void onInit() {
     super.onInit();
-    _initTTS();
+    _initTts();
   }
 
-  Future<void> _initTTS() async {
-    // Start Handler
+  @override
+  void onClose() {
+    _tts.stop();
+    super.onClose();
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  Future<void> _initTts() async {
     _tts.setStartHandler(() {
-      _state.value = TtsState.playing;
+      state.value = TtsState.playing;
     });
 
-    // Completion Handler
     _tts.setCompletionHandler(() {
-      _state.value = TtsState.stopped;
-      _currentText.value = '';
+      state.value = TtsState.stopped;
+      currentText.value = '';
     });
 
-    // Cancel Handler
     _tts.setCancelHandler(() {
-      _state.value = TtsState.stopped;
+      state.value = TtsState.stopped;
     });
 
-    // Pause Handler
     _tts.setPauseHandler(() {
-      _state.value = TtsState.paused;
+      state.value = TtsState.paused;
     });
 
-    // Continue Handler
     _tts.setContinueHandler(() {
-      _state.value = TtsState.playing;
+      state.value = TtsState.playing;
     });
 
-    // Error Handler
     _tts.setErrorHandler((msg) {
-      debugPrint('TTS Error: $msg');
-      _state.value = TtsState.stopped;
+      state.value = TtsState.stopped;
     });
 
-    // Progress Handler (for word highlighting)
+    // Word boundary — for live word highlight while reading
     _tts.setProgressHandler((text, start, end, word) {
-      _currentWordStart.value = start;
-      _currentWordEnd.value = end;
+      currentWordStart.value = start;
+      currentWordEnd.value = end;
     });
 
     await _applySettings();
+    await _loadLanguages();
   }
 
   Future<void> _applySettings() async {
-    await _tts.setLanguage(_language.value);
-    await _tts.setSpeechRate(_speechRate.value);
-    await _tts.setPitch(_pitch.value);
-    await _tts.setVolume(_volume.value);
+    await _tts.setLanguage(language.value);
+    await _tts.setSpeechRate(speechRate.value);
+    await _tts.setPitch(pitch.value);
+    await _tts.setVolume(volume.value);
   }
 
+  Future<void> _loadLanguages() async {
+    final langs = await _tts.getLanguages;
+    availableLanguages.assignAll(List<String>.from(langs));
+  }
+
+  // ── Public API ─────────────────────────────────────────────────────────────
+
+  /// Speak a given text. Stops any current speech first.
   Future<void> speak(String text) async {
     if (text.trim().isEmpty) return;
     await stop();
-    _currentText.value = text;
+    currentText.value = text;
     await _applySettings();
     await _tts.speak(text);
   }
 
+  /// Pause current speech
   Future<void> pause() async {
-    if (isPlaying) {
-      await _tts.pause();
-    }
+    if (isPlaying) await _tts.pause();
   }
 
+  /// Resume paused speech
   Future<void> resume() async {
-    if (isPaused) {
-      await _tts.speak(_currentText.value); // Re-speak on iOS
-    }
+    if (isPaused) await _tts.speak(currentText.value);
   }
 
+  /// Stop all speech
   Future<void> stop() async {
     await _tts.stop();
-    _state.value = TtsState.stopped;
-    _currentText.value = '';
-    _currentWordStart.value = 0;
-    _currentWordEnd.value = 0;
+    state.value = TtsState.stopped;
+    currentText.value = '';
   }
 
+  /// Toggle play / pause
   Future<void> togglePlayPause() async {
     if (isPlaying) {
       await pause();
@@ -130,38 +123,30 @@ class ScreenReaderController extends GetxController {
     }
   }
 
+  /// Set speech rate (0.1 – 1.0)
   Future<void> setSpeechRate(double rate) async {
-    _speechRate.value = rate.clamp(0.1, 1.0);
-    await _tts.setSpeechRate(_speechRate.value);
+    speechRate.value = rate.clamp(0.1, 1.0);
+    await _tts.setSpeechRate(speechRate.value);
   }
 
-  Future<void> setPitch(double pitch) async {
-    _pitch.value = pitch.clamp(0.5, 2.0);
-    await _tts.setPitch(_pitch.value);
+  /// Set pitch (0.5 – 2.0)
+  Future<void> setPitch(double value) async {
+    pitch.value = value.clamp(0.5, 2.0);
+    await _tts.setPitch(pitch.value);
   }
 
-  Future<void> setVolume(double volume) async {
-    _volume.value = volume.clamp(0.0, 1.0);
-    await _tts.setVolume(_volume.value);
+  /// Set volume (0.0 – 1.0)
+  Future<void> setVolume(double value) async {
+    volume.value = value.clamp(0.0, 1.0);
+    await _tts.setVolume(volume.value);
   }
 
+  /// Change TTS language
   Future<void> setLanguage(String lang) async {
-    _language.value = lang;
-    await _tts.setLanguage(_language.value);
-  }
-
-  Future<List<String>> getAvailableLanguages() async {
-    final langs = await _tts.getLanguages;
-    return List<String>.from(langs ?? []);
-  }
-
-  @override
-  void onClose() {
-    _tts.stop();
-    super.onClose();
+    language.value = lang;
+    await _tts.setLanguage(lang);
   }
 }
-
 
 
 class BookModel {

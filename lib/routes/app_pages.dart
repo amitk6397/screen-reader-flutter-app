@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:screen_reader/views/after_login/book_reader_screen.dart';
 import 'package:screen_reader/views/after_login/home_screen.dart';
 import 'package:screen_reader/views/before_login/login_screen.dart';
 import 'package:screen_reader/views/before_login/onboarding_screen.dart';
@@ -36,5 +37,10 @@ class AppPages {
       name: AppRoutes.mySheel,
       page: () => const MainShell(),
     ),
+
+    // GetPage(
+    //   name: AppRoutes.bookReader,
+    //   page: () => const BookReaderScreen(book: book),
+    // ),
   ];
 }

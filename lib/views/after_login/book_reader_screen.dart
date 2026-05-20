@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:screen_reader/view_model/after_login_ctr/book_reader_controller.dart' show BookModel;
-import '../../model/book_model.dart' hide BookModel;
-import '../../res/app_colors.dart';
-import '../../utils/text_style.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../res/app_colors.dart';
 import '../../utils/text_style.dart';
@@ -18,28 +13,25 @@ class BookReaderScreen extends StatefulWidget {
 }
 
 class _BookReaderScreenState extends State<BookReaderScreen> {
+  final ScreenReaderController _reader = Get.find<ScreenReaderController>();
   int _currentChapter = 0;
   bool _showControls = true;
 
-  final ScreenReaderController reader = Get.put(ScreenReaderController());
-
   BookChapter get chapter => widget.book.chapters[_currentChapter];
 
-  void _speakChapter() {
-    final text = '${chapter.title}. ${chapter.content}';
-    reader.speak(text);
-  }
+  void _speakChapter() =>
+      _reader.speak('${chapter.title}. ${chapter.content}');
 
   void _nextChapter() {
     if (_currentChapter < widget.book.chapters.length - 1) {
-      reader.stop();
+      _reader.stop();
       setState(() => _currentChapter++);
     }
   }
 
   void _prevChapter() {
     if (_currentChapter > 0) {
-      reader.stop();
+      _reader.stop();
       setState(() => _currentChapter--);
     }
   }
@@ -51,93 +43,13 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Header ──────────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      reader.stop();
-                      Get.back();
-                    },
-                    child: Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        color: AppColors.navyMid,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
-                      ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(widget.book.title,
-                            style: AppTextStyles.headingSmall,
-                            overflow: TextOverflow.ellipsis),
-                        Text(widget.book.author,
-                            style: AppTextStyles.bodySmall),
-                      ],
-                    ),
-                  ),
-                  // Settings button
-                  GestureDetector(
-                    onTap: () => _showSettingsSheet(),
-                    child: Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        color: AppColors.navyMid,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
-                      ),
-                      child: const Icon(Icons.tune_rounded,
-                          color: AppColors.textMuted, size: 18),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // ── Header (no observables here — no Obx needed) ──────────────
+            _buildHeader(),
 
-            // ── Chapter indicator ────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: widget.book.coverColor.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                          color: widget.book.coverColor.withOpacity(0.4)),
-                    ),
-                    child: Text(
-                      'Chapter ${_currentChapter + 1} / ${widget.book.chapters.length}',
-                      style: TextStyle(
-                        fontFamily: 'DMSans',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: widget.book.coverColor,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  Obx(() => reader.isPlaying
-                      ? _PulsingDot(color: widget.book.coverColor)
-                      : const SizedBox.shrink()),
-                ],
-              ),
-            ),
+            // ── Chapter indicator + pulsing dot ───────────────────────────
+            _buildChapterBar(),
 
-            // ── Content ──────────────────────────────────────────────────
+            // ── Scrollable content ────────────────────────────────────────
             Expanded(
               child: GestureDetector(
                 onTap: () => setState(() => _showControls = !_showControls),
@@ -146,7 +58,7 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Chapter title
+                      const SizedBox(height: 4),
                       Text(
                         chapter.title,
                         style: const TextStyle(
@@ -159,12 +71,19 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Highlighted Text
-                      Obx(() => _HighlightedText(
-                        text: chapter.content,
-                        currentStart: reader.currentWordStart,
-                        currentEnd: reader.currentWordEnd,
-                      )),
+                      // ── WORD HIGHLIGHT ────────────────────────────────
+                      // Obx sirf is widget ke liye — teeno observables
+                      // isi Obx ke direct scope mein read ho rahe hain
+                      Obx(() {
+                        final isActive = _reader.currentText.value.isNotEmpty;
+                        final start = isActive ? _reader.currentWordStart.value : -1;
+                        final end   = isActive ? _reader.currentWordEnd.value   : -1;
+                        return _HighlightedText(
+                          text: chapter.content,
+                          currentStart: start,
+                          currentEnd: end,
+                        );
+                      }),
 
                       const SizedBox(height: 80),
                     ],
@@ -173,66 +92,100 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
               ),
             ),
 
-            // ── Playback Controls ────────────────────────────────────────
-            Obx(() => AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              height: _showControls ? null : 0,
-              child: _showControls
-                  ? _PlaybackControls(
-                reader: reader,
-                book: widget.book,
-                chapter: chapter,
-                chapterIndex: _currentChapter,
-                totalChapters: widget.book.chapters.length,
-                onPlay: _speakChapter,
-                onNext: _nextChapter,
-                onPrev: _prevChapter,
-              )
-                  : const SizedBox.shrink(),
-            )),
+            // ── Playback controls ─────────────────────────────────────────
+            if (_showControls) _buildControls(),
           ],
         ),
       ),
     );
   }
 
-  void _showSettingsSheet() {
-    Get.bottomSheet(
-      _TtsSettingsSheet(reader: reader),
-      backgroundColor: AppColors.navyMid,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              _reader.stop();
+              Get.back();
+            },
+            child: Container(
+              width: 38, height: 38,
+              decoration: BoxDecoration(
+                color: AppColors.navyMid,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.navyLight),
+              ),
+              child: const Icon(Icons.arrow_back_ios_new_rounded,
+                  color: AppColors.textMuted, size: 16),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.book.title,
+                    style: AppTextStyles.headingSmall,
+                    overflow: TextOverflow.ellipsis),
+                Text(widget.book.author, style: AppTextStyles.bodySmall),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: _showSettingsSheet,
+            child: Container(
+              width: 38, height: 38,
+              decoration: BoxDecoration(
+                color: AppColors.navyMid,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.navyLight),
+              ),
+              child: const Icon(Icons.tune_rounded,
+                  color: AppColors.textMuted, size: 18),
+            ),
+          ),
+        ],
       ),
     );
   }
-}
 
-// ─── Playback Controls ─────────────────────────────────────────────────────────
+  Widget _buildChapterBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: widget.book.coverColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                  color: widget.book.coverColor.withOpacity(0.4)),
+            ),
+            child: Text(
+              'Chapter ${_currentChapter + 1} / ${widget.book.chapters.length}',
+              style: TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: widget.book.coverColor,
+              ),
+            ),
+          ),
+          const Spacer(),
+          // Obx sirf pulsing dot ke liye — ek hi observable: isPlaying
+          Obx(() => _reader.isPlaying
+              ? _PulsingDot(color: widget.book.coverColor)
+              : const SizedBox.shrink()),
+        ],
+      ),
+    );
+  }
 
-class _PlaybackControls extends StatelessWidget {
-  final ScreenReaderController reader;
-  final BookModel book;
-  final BookChapter chapter;
-  final int chapterIndex;
-  final int totalChapters;
-  final VoidCallback onPlay;
-  final VoidCallback onNext;
-  final VoidCallback onPrev;
-
-  const _PlaybackControls({
-    super.key,
-    required this.reader,
-    required this.book,
-    required this.chapter,
-    required this.chapterIndex,
-    required this.totalChapters,
-    required this.onPlay,
-    required this.onNext,
-    required this.onPrev,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  /// Controls section — har observable apne Obx mein wrap hai
+  Widget _buildControls() {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 20),
       decoration: BoxDecoration(
@@ -241,66 +194,60 @@ class _PlaybackControls extends StatelessWidget {
             top: BorderSide(color: AppColors.navyLight.withOpacity(0.5))),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Speed indicator
-          Obx(() => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '${reader.speechRate.toStringAsFixed(1)}x speed  •  '
-                    'Pitch ${reader.pitch.toStringAsFixed(1)}',
-                style: const TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 11,
-                  color: AppColors.textMuted,
-                ),
-              ),
-            ],
+
+          // Speed + pitch text — apna Obx
+          Obx(() => Text(
+            '${_reader.speechRate.value.toStringAsFixed(1)}x speed  •  '
+                'Pitch ${_reader.pitch.value.toStringAsFixed(1)}',
+            style: const TextStyle(
+              fontFamily: 'DMSans',
+              fontSize: 11,
+              color: AppColors.textMuted,
+            ),
           )),
 
           const SizedBox(height: 14),
 
-          // Main controls
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              // Prev chapter
               _ControlButton(
                 icon: Icons.skip_previous_rounded,
                 size: 28,
-                enabled: chapterIndex > 0,
-                onTap: onPrev,
+                enabled: _currentChapter > 0,
+                onTap: _prevChapter,
               ),
 
+              // Replay
               _ControlButton(
                 icon: Icons.replay_10_rounded,
                 size: 28,
-                onTap: () => reader.speak(chapter.content),
+                onTap: () => _reader.speak(chapter.content),
               ),
 
-              // Play/Pause Button
+              // Play / Pause — apna Obx
               Obx(() => GestureDetector(
-                onTap: () {
-                  if (reader.isStopped) {
-                    onPlay();
-                  } else {
-                    reader.togglePlayPause();
-                  }
-                },
+                onTap: () => _reader.isStopped
+                    ? _speakChapter()
+                    : _reader.togglePlayPause(),
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: 60, height: 60,
                   decoration: BoxDecoration(
-                    color: book.coverColor,
+                    color: widget.book.coverColor,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                          color: book.coverColor.withOpacity(0.4),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4)),
+                        color: widget.book.coverColor.withOpacity(0.4),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
                   ),
                   child: Icon(
-                    reader.isPlaying
+                    _reader.isPlaying
                         ? Icons.pause_rounded
                         : Icons.play_arrow_rounded,
                     color: Colors.white,
@@ -309,17 +256,19 @@ class _PlaybackControls extends StatelessWidget {
                 ),
               )),
 
+              // Stop
               _ControlButton(
-                icon: Icons.forward_10_rounded,
+                icon: Icons.stop_rounded,
                 size: 28,
-                onTap: () => reader.stop(),
+                onTap: () => _reader.stop(),
               ),
 
+              // Next chapter
               _ControlButton(
                 icon: Icons.skip_next_rounded,
                 size: 28,
-                enabled: chapterIndex < totalChapters - 1,
-                onTap: onNext,
+                enabled: _currentChapter < widget.book.chapters.length - 1,
+                onTap: _nextChapter,
               ),
             ],
           ),
@@ -327,7 +276,20 @@ class _PlaybackControls extends StatelessWidget {
       ),
     );
   }
+
+  void _showSettingsSheet() {
+    Get.bottomSheet(
+      _TtsSettingsSheet(reader: _reader),
+      backgroundColor: AppColors.navyMid,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+    );
+  }
 }
+
+// ─── Control Button ────────────────────────────────────────────────────────────
 
 class _ControlButton extends StatelessWidget {
   final IconData icon;
@@ -336,7 +298,6 @@ class _ControlButton extends StatelessWidget {
   final bool enabled;
 
   const _ControlButton({
-    super.key,
     required this.icon,
     required this.size,
     required this.onTap,
@@ -354,7 +315,8 @@ class _ControlButton extends StatelessWidget {
   }
 }
 
-// ─── Word Highlight Text ────────────────────────────────────────────────────────
+// ─── Word Highlight Text ───────────────────────────────────────────────────────
+// Pure StatelessWidget — observables bahar se values ke roop mein aate hain
 
 class _HighlightedText extends StatelessWidget {
   final String text;
@@ -362,7 +324,6 @@ class _HighlightedText extends StatelessWidget {
   final int currentEnd;
 
   const _HighlightedText({
-    super.key,
     required this.text,
     required this.currentStart,
     required this.currentEnd,
@@ -370,31 +331,25 @@ class _HighlightedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const baseStyle = TextStyle(
+      fontFamily: 'DMSans',
+      fontSize: 15,
+      color: AppColors.textPrimary,
+      height: 1.8,
+    );
+
     if (currentStart < 0 || currentStart >= text.length) {
-      return Text(
-        text,
-        style: const TextStyle(
-          fontFamily: 'DMSans',
-          fontSize: 15,
-          color: AppColors.textPrimary,
-          height: 1.8,
-        ),
-      );
+      return Text(text, style: baseStyle);
     }
 
-    final before = text.substring(0, currentStart);
-    final word = text.substring(currentStart,
-        currentEnd.clamp(0, text.length));
-    final after = text.substring(currentEnd.clamp(0, text.length));
+    final safeEnd = currentEnd.clamp(0, text.length);
+    final before  = text.substring(0, currentStart);
+    final word    = text.substring(currentStart, safeEnd);
+    final after   = text.substring(safeEnd);
 
     return RichText(
       text: TextSpan(
-        style: const TextStyle(
-          fontFamily: 'DMSans',
-          fontSize: 15,
-          color: AppColors.textPrimary,
-          height: 1.8,
-        ),
+        style: baseStyle,
         children: [
           TextSpan(text: before),
           TextSpan(
@@ -413,49 +368,24 @@ class _HighlightedText extends StatelessWidget {
 }
 
 // ─── TTS Settings Bottom Sheet ─────────────────────────────────────────────────
+// Har slider ka apna Obx — ek bada Obx nahi
 
-class _TtsSettingsSheet extends StatefulWidget {
+class _TtsSettingsSheet extends StatelessWidget {
   final ScreenReaderController reader;
-  const _TtsSettingsSheet({super.key, required this.reader});
-
-  @override
-  State<_TtsSettingsSheet> createState() => _TtsSettingsSheetState();
-}
-
-class _TtsSettingsSheetState extends State<_TtsSettingsSheet> {
-  late double _rate;
-  late double _pitch;
-  late double _volume;
-  List<String> _languages = [];
-  late String _selectedLang;
-
-  @override
-  void initState() {
-    super.initState();
-    _rate = widget.reader.speechRate;
-    _pitch = widget.reader.pitch;
-    _volume = widget.reader.volume;
-    _selectedLang = widget.reader.language;
-    _loadLanguages();
-  }
-
-  Future<void> _loadLanguages() async {
-    final langs = await widget.reader.getAvailableLanguages();
-    setState(() => _languages = langs);
-  }
+  const _TtsSettingsSheet({required this.reader});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(
+          16, 16, 16, MediaQuery.of(context).viewInsets.bottom + 32),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Container(
-              width: 36,
-              height: 4,
+              width: 36, height: 4,
               decoration: BoxDecoration(
                 color: AppColors.navyLight,
                 borderRadius: BorderRadius.circular(2),
@@ -463,7 +393,6 @@ class _TtsSettingsSheetState extends State<_TtsSettingsSheet> {
             ),
           ),
           const SizedBox(height: 16),
-
           const Text('Reader Settings',
               style: TextStyle(
                 fontFamily: 'PlayfairDisplay',
@@ -471,125 +400,138 @@ class _TtsSettingsSheetState extends State<_TtsSettingsSheet> {
                 fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
               )),
-
           const SizedBox(height: 20),
 
-          _sheetSlider(
+          // Speed slider — apna Obx
+          Obx(() => _SheetSlider(
             label: 'Speed',
-            value: _rate,
-            displayValue: '${_rate.toStringAsFixed(1)}x',
+            value: reader.speechRate.value,
+            displayValue:
+            '${reader.speechRate.value.toStringAsFixed(1)}x',
             min: 0.1,
             max: 1.0,
             icon: Icons.speed_rounded,
             color: AppColors.coverBlue,
-            onChanged: (v) {
-              setState(() => _rate = v);
-              widget.reader.setSpeechRate(v);
-            },
-          ),
-
+            onChanged: reader.setSpeechRate,
+          )),
           const SizedBox(height: 14),
 
-          _sheetSlider(
+          // Pitch slider — apna Obx
+          Obx(() => _SheetSlider(
             label: 'Pitch',
-            value: _pitch,
-            displayValue: _pitch.toStringAsFixed(1),
+            value: reader.pitch.value,
+            displayValue: reader.pitch.value.toStringAsFixed(1),
             min: 0.5,
             max: 2.0,
             icon: Icons.graphic_eq_rounded,
             color: AppColors.coverPurple,
-            onChanged: (v) {
-              setState(() => _pitch = v);
-              widget.reader.setPitch(v);
-            },
-          ),
-
+            onChanged: reader.setPitch,
+          )),
           const SizedBox(height: 14),
 
-          _sheetSlider(
+          // Volume slider — apna Obx
+          Obx(() => _SheetSlider(
             label: 'Volume',
-            value: _volume,
-            displayValue: '${(_volume * 100).round()}%',
+            value: reader.volume.value,
+            displayValue: '${(reader.volume.value * 100).round()}%',
             min: 0.0,
             max: 1.0,
             icon: Icons.volume_up_rounded,
             color: AppColors.coverGreen,
-            onChanged: (v) {
-              setState(() => _volume = v);
-              widget.reader.setVolume(v);
-            },
-          ),
+            onChanged: reader.setVolume,
+          )),
 
-          if (_languages.isNotEmpty) ...[
-            const SizedBox(height: 20),
-            const Text('LANGUAGE',
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textMuted,
-                  letterSpacing: 1,
-                )),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 36,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _languages.take(8).length,
-                itemBuilder: (_, i) {
-                  final lang = _languages[i];
-                  final sel = _selectedLang == lang;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() => _selectedLang = lang);
-                      widget.reader.setLanguage(lang);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: sel
-                            ? AppColors.accent.withOpacity(0.15)
-                            : AppColors.navyLight,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: sel ? AppColors.accent : AppColors.navyLight,
+          // Language chips — apna Obx
+          Obx(() {
+            if (reader.availableLanguages.isEmpty) return const SizedBox.shrink();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                const Text('LANGUAGE',
+                    style: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textMuted,
+                      letterSpacing: 1,
+                    )),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 36,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: reader.availableLanguages.take(8).length,
+                    itemBuilder: (_, i) {
+                      final lang = reader.availableLanguages[i];
+                      final isSelected = reader.language.value == lang;
+                      return GestureDetector(
+                        onTap: () => reader.setLanguage(lang),
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColors.accent.withOpacity(0.15)
+                                : AppColors.navyLight,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppColors.accent
+                                  : AppColors.navyLight,
+                            ),
+                          ),
+                          child: Text(lang,
+                              style: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: isSelected
+                                    ? AppColors.accent
+                                    : AppColors.textMuted,
+                              )),
                         ),
-                      ),
-                      child: Text(lang,
-                          style: TextStyle(
-                            fontFamily: 'DMSans',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: sel ? AppColors.accent : AppColors.textMuted,
-                          )),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }),
         ],
       ),
     );
   }
+}
 
-  Widget _sheetSlider({
-    required String label,
-    required double value,
-    required String displayValue,
-    required double min,
-    required double max,
-    required IconData icon,
-    required Color color,
-    required ValueChanged<double> onChanged,
-  }) {
+class _SheetSlider extends StatelessWidget {
+  final String label;
+  final double value;
+  final String displayValue;
+  final double min;
+  final double max;
+  final IconData icon;
+  final Color color;
+  final ValueChanged<double> onChanged;
+
+  const _SheetSlider({
+    required this.label,
+    required this.value,
+    required this.displayValue,
+    required this.min,
+    required this.max,
+    required this.icon,
+    required this.color,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          width: 34,
-          height: 34,
+          width: 34, height: 34,
           decoration: BoxDecoration(
             color: color.withOpacity(0.15),
             borderRadius: BorderRadius.circular(10),
@@ -616,27 +558,25 @@ class _TtsSettingsSheetState extends State<_TtsSettingsSheet> {
         ),
         SizedBox(
           width: 42,
-          child: Text(
-            displayValue,
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: color,
-            ),
-          ),
+          child: Text(displayValue,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: color,
+              )),
         ),
       ],
     );
   }
 }
 
-// ─── Pulsing Dot ──────────────────────────────────────────
+// ─── Pulsing Dot ───────────────────────────────────────────────────────────────
 
 class _PulsingDot extends StatefulWidget {
   final Color color;
-  const _PulsingDot({super.key, required this.color});
+  const _PulsingDot({required this.color});
 
   @override
   State<_PulsingDot> createState() => _PulsingDotState();
@@ -653,8 +593,8 @@ class _PulsingDotState extends State<_PulsingDot>
     _ctrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 900))
       ..repeat(reverse: true);
-    _anim = Tween(begin: 0.4, end: 1.0).animate(
-        CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _anim = Tween(begin: 0.4, end: 1.0)
+        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -670,18 +610,17 @@ class _PulsingDotState extends State<_PulsingDot>
       child: Row(
         children: [
           Container(
-            width: 6,
-            height: 6,
+            width: 6, height: 6,
             decoration:
             BoxDecoration(color: widget.color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 4),
-          const Text('Reading',
+          Text('Reading',
               style: TextStyle(
                 fontFamily: 'DMSans',
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: Colors.white, // or widget.color
+                color: widget.color,
               )),
         ],
       ),
@@ -689,150 +628,128 @@ class _PulsingDotState extends State<_PulsingDot>
   }
 }
 
+// ─── Screen Reader Bar ─────────────────────────────────────────────────────────
 
-// class ScreenReaderBar extends StatelessWidget {
-//   const ScreenReaderBar({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer<ScreenReaderService>(
-//       builder: (context, reader, _) {
-//         // Only show when playing or paused
-//         if (reader.isStopped) return const SizedBox.shrink();
-//
-//         return AnimatedSlide(
-//           offset: reader.isStopped ? const Offset(0, 1) : Offset.zero,
-//           duration: const Duration(milliseconds: 300),
-//           curve: Curves.easeOutCubic,
-//           child: Container(
-//             margin: const EdgeInsets.all(12),
-//             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-//             decoration: BoxDecoration(
-//               color: AppColors.navyMid,
-//               borderRadius: BorderRadius.circular(18),
-//               border: Border.all(
-//                   color: AppColors.accent.withOpacity(0.4), width: 1.5),
-//               boxShadow: [
-//                 BoxShadow(
-//                   color: Colors.black.withOpacity(0.3),
-//                   blurRadius: 16,
-//                   offset: const Offset(0, 4),
-//                 ),
-//               ],
-//             ),
-//             child: Row(
-//               children: [
-//                 // Speaking indicator + text
-//                 Container(
-//                   width: 8,
-//                   height: 8,
-//                   decoration: BoxDecoration(
-//                     color: reader.isPlaying ? AppColors.accent : AppColors.textMuted,
-//                     shape: BoxShape.circle,
-//                   ),
-//                 ),
-//                 const SizedBox(width: 10),
-//                 Expanded(
-//                   child: Text(
-//                     reader.isPlaying ? 'Reading...' : 'Paused',
-//                     style: const TextStyle(
-//                       fontFamily: 'DMSans',
-//                       fontSize: 13,
-//                       fontWeight: FontWeight.w600,
-//                       color: AppColors.textPrimary,
-//                     ),
-//                     overflow: TextOverflow.ellipsis,
-//                   ),
-//                 ),
-//
-//                 // Rewind / Prev sentence — just restarts current text
-//                 _BarButton(
-//                   icon: Icons.replay_rounded,
-//                   onTap: () {
-//                     final text = reader.currentText;
-//                     reader.speak(text);
-//                   },
-//                 ),
-//
-//                 // Play / Pause
-//                 _BarButton(
-//                   icon: reader.isPlaying
-//                       ? Icons.pause_rounded
-//                       : Icons.play_arrow_rounded,
-//                   highlight: true,
-//                   onTap: () => reader.togglePlayPause(),
-//                 ),
-//
-//                 // Stop
-//                 _BarButton(
-//                   icon: Icons.stop_rounded,
-//                   onTap: () => reader.stop(),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
-//
-// class _BarButton extends StatelessWidget {
-//   final IconData icon;
-//   final VoidCallback onTap;
-//   final bool highlight;
-//
-//   const _BarButton({
-//     required this.icon,
-//     required this.onTap,
-//     this.highlight = false,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: Container(
-//         width: 34,
-//         height: 34,
-//         margin: const EdgeInsets.only(left: 6),
-//         decoration: BoxDecoration(
-//           color: highlight
-//               ? AppColors.accent.withOpacity(0.15)
-//               : AppColors.navyLight,
-//           borderRadius: BorderRadius.circular(10),
-//           border: highlight
-//               ? Border.all(color: AppColors.accent.withOpacity(0.5))
-//               : null,
-//         ),
-//         child: Icon(
-//           icon,
-//           color: highlight ? AppColors.accent : AppColors.textMuted,
-//           size: 18,
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// /// Wraps a screen's body. Shows the [ScreenReaderBar] at the bottom
-// /// when TTS is playing or paused.
-// class ScreenReaderOverlay extends StatelessWidget {
-//   final Widget child;
-//   const ScreenReaderOverlay({super.key, required this.child});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       children: [
-//         child,
-//         Positioned(
-//           bottom: 0,
-//           left: 0,
-//           right: 0,
-//           child: const ScreenReaderBar(),
-//         ),
-//       ],
-//     );
-//   }
-// }
+class ScreenReaderBar extends GetWidget<ScreenReaderController> {
+  const ScreenReaderBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Single Obx — controller.isPlaying aur controller.isStopped
+    // dono is ek Obx ke direct scope mein hain
+    return Obx(() {
+      if (controller.isStopped) return const SizedBox.shrink();
+      return Container(
+        margin: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: AppColors.navyMid,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+              color: AppColors.accent.withOpacity(0.4), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 8, height: 8,
+              decoration: BoxDecoration(
+                color: controller.isPlaying
+                    ? AppColors.accent
+                    : AppColors.textMuted,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                controller.isPlaying ? 'Reading...' : 'Paused',
+                style: const TextStyle(
+                  fontFamily: 'DMSans',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            _BarButton(
+              icon: Icons.replay_rounded,
+              onTap: () => controller.speak(controller.currentText.value),
+            ),
+            _BarButton(
+              icon: controller.isPlaying
+                  ? Icons.pause_rounded
+                  : Icons.play_arrow_rounded,
+              highlight: true,
+              onTap: controller.togglePlayPause,
+            ),
+            _BarButton(
+              icon: Icons.stop_rounded,
+              onTap: controller.stop,
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class _BarButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool highlight;
+
+  const _BarButton({
+    required this.icon,
+    required this.onTap,
+    this.highlight = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 34, height: 34,
+        margin: const EdgeInsets.only(left: 6),
+        decoration: BoxDecoration(
+          color: highlight
+              ? AppColors.accent.withOpacity(0.15)
+              : AppColors.navyLight,
+          borderRadius: BorderRadius.circular(10),
+          border: highlight
+              ? Border.all(color: AppColors.accent.withOpacity(0.5))
+              : null,
+        ),
+        child: Icon(icon,
+            color: highlight ? AppColors.accent : AppColors.textMuted,
+            size: 18),
+      ),
+    );
+  }
+}
+
+class ScreenReaderOverlay extends StatelessWidget {
+  final Widget child;
+  const ScreenReaderOverlay({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        child,
+        const Positioned(
+          bottom: 0, left: 0, right: 0,
+          child: ScreenReaderBar(),
+        ),
+      ],
+    );
+  }
+}
