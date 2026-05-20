@@ -1,4 +1,8 @@
+// lib/views/after_login/account/profile_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:screen_reader/providers/theme_provider.dart';
 import 'package:screen_reader/views/after_login/account/privacy_policy_screen.dart';
 import 'package:screen_reader/views/after_login/account/profile_edit.dart';
 import 'package:screen_reader/views/after_login/account/sleep_time_screen.dart';
@@ -11,35 +15,63 @@ import 'playback_speed_screen.dart';
 import 'screen_reader_screen.dart';
 import 'font_size_screen.dart';
 
-
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final isDark = themeProvider.isDark;
+
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Header
+              // ── Header ──────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
                 child: Row(
                   children: [
-                    const Text('Profile', style: AppTextStyles.displaySmall),
+                    Text('Profile',
+                        style: AppTextStyles.displaySmall
+                            .copyWith(color: AppColors.textPrimary(context))),
                     const Spacer(),
+
+                    // Theme toggle button
+                    GestureDetector(
+                      onTap: () => themeProvider.toggle(),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: AppColors.navyMid(context),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.navyLight(context)),
+                        ),
+                        child: Icon(
+                          isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                          color: AppColors.accent,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    // Settings button
                     Container(
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.settings_outlined,
-                          color: AppColors.textMuted, size: 18),
+                      child: Icon(Icons.settings_outlined,
+                          color: AppColors.textMuted(context), size: 18),
                     ),
                   ],
                 ),
@@ -47,13 +79,13 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Profile card
+              // ── Profile card ─────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: AppColors.navyLight,
+                    color: AppColors.navyLight(context),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                         color: AppColors.accent.withOpacity(0.2), width: 1),
@@ -68,15 +100,13 @@ class ProfileScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: const Center(
-                          child: Text(
-                            'R',
-                            style: TextStyle(
-                              fontFamily: 'PlayfairDisplay',
-                              fontSize: 26,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.navy,
-                            ),
-                          ),
+                          child: Text('R',
+                              style: TextStyle(
+                                fontFamily: 'PlayfairDisplay',
+                                fontSize: 26,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF0F1724),
+                              )),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -84,11 +114,13 @@ class ProfileScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Rohan Sharma',
-                                style: AppTextStyles.headingLarge),
+                            Text('Rohan Sharma',
+                                style: AppTextStyles.headingLarge
+                                    .copyWith(color: AppColors.textPrimary(context))),
                             const SizedBox(height: 2),
                             Text('rohan@example.com',
-                                style: AppTextStyles.bodySmall),
+                                style: AppTextStyles.bodySmall
+                                    .copyWith(color: AppColors.textMuted(context))),
                             const SizedBox(height: 6),
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -97,27 +129,22 @@ class ProfileScreen extends StatelessWidget {
                                 color: AppColors.accentDim,
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              child: const Text(
-                                'Pro Member',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: AppColors.accent,
-                                  fontFamily: 'DMSans',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
+                              child: const Text('Pro Member',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.accent,
+                                    fontFamily: 'DMSans',
+                                    fontWeight: FontWeight.w700,
+                                  )),
                             ),
                           ],
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const EditProfileScreen()),
-                        ),
-                        child: const Icon(Icons.edit_outlined,
-                            color: AppColors.textMuted, size: 18),
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => const EditProfileScreen())),
+                        child: Icon(Icons.edit_outlined,
+                            color: AppColors.textMuted(context), size: 18),
                       ),
                     ],
                   ),
@@ -126,58 +153,51 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Stats
+              // ── Stats ────────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   children: [
-                    _statBox('47', 'Books Read'),
+                    _statBox(context, '47', 'Books Read'),
                     const SizedBox(width: 10),
-                    _statBox('128h', 'Listened'),
+                    _statBox(context, '128h', 'Listened'),
                     const SizedBox(width: 10),
-                    _statBox('12', 'Day Streak'),
+                    _statBox(context, '12', 'Day Streak'),
                   ],
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              // Menu
+              // ── Menu ─────────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   children: [
                     _menuSection(context, 'Preferences', [
-                      _MenuItem(Icons.mic_none_rounded, 'Voice Settings',
-                          AppColors.coverGreen,
+                      _MenuItem(Icons.mic_none_rounded, 'Voice Settings', AppColors.coverGreen,
                           route: const VoiceSettingsScreen()),
-                      _MenuItem(Icons.speed_rounded, 'Playback Speed',
-                          AppColors.coverBlue,
+                      _MenuItem(Icons.speed_rounded, 'Playback Speed', AppColors.coverBlue,
                           route: const PlaybackSpeedScreen()),
-                      _MenuItem(Icons.nightlight_round, 'Sleep Timer',
-                          AppColors.coverPurple,
+                      _MenuItem(Icons.nightlight_round, 'Sleep Timer', AppColors.coverPurple,
                           route: const SleepTimerScreen()),
                     ]),
                     const SizedBox(height: 12),
                     _menuSection(context, 'Accessibility', [
-                      _MenuItem(Icons.accessibility_new_rounded, 'Screen Reader',
-                          AppColors.info,
+                      _MenuItem(Icons.accessibility_new_rounded, 'Screen Reader', AppColors.info,
                           route: const ScreenReaderScreen()),
-                      _MenuItem(Icons.text_fields_rounded, 'Font Size',
-                          AppColors.coverTeal,
+                      _MenuItem(Icons.text_fields_rounded, 'Font Size', AppColors.coverTeal,
                           route: const FontSizeScreen()),
                     ]),
                     const SizedBox(height: 12),
                     _menuSection(context, 'Account', [
-                      _MenuItem(Icons.notifications_outlined, 'Notifications',
-                          AppColors.warning,
+                      _MenuItem(Icons.brightness_6_rounded, 'Appearance', AppColors.coverPurple,
+                          isThemeToggle: true),
+                      _MenuItem(Icons.notifications_outlined, 'Notifications', AppColors.warning,
                           route: const NotificationsScreen()),
-                      _MenuItem(Icons.privacy_tip_outlined, 'Privacy',
-                          AppColors.textMuted,
+                      _MenuItem(Icons.privacy_tip_outlined, 'Privacy', AppColors.textMuted(context),
                           route: const PrivacyScreen()),
-                      _MenuItem(
-                          Icons.logout_rounded, 'Log Out', AppColors.danger,
-                          danger: true),
+                      _MenuItem(Icons.logout_rounded, 'Log Out', AppColors.danger, danger: true),
                     ]),
                   ],
                 ),
@@ -191,57 +211,54 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _statBox(String value, String label) {
+  Widget _statBox(BuildContext context, String value, String label) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.navyMid,
+          color: AppColors.navyMid(context),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.navyLight, width: 1),
+          border: Border.all(color: AppColors.navyLight(context), width: 1),
         ),
         child: Column(
           children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
+            Text(value,
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary(context),
+                )),
             const SizedBox(height: 2),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 10,
-                color: AppColors.textMuted,
-                fontFamily: 'DMSans',
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.5,
-              ),
-            ),
+            Text(label,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: AppColors.textMuted(context),
+                  fontFamily: 'DMSans',
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.5,
+                )),
           ],
         ),
       ),
     );
   }
 
-  Widget _menuSection(
-      BuildContext context, String title, List<_MenuItem> items) {
+  Widget _menuSection(BuildContext context, String title, List<_MenuItem> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8, left: 2),
-          child: Text(title.toUpperCase(), style: AppTextStyles.labelMedium),
+          child: Text(title.toUpperCase(),
+              style: AppTextStyles.labelMedium
+                  .copyWith(color: AppColors.textMuted(context))),
         ),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.navyMid,
+            color: AppColors.navyMid(context),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.navyLight, width: 1),
+            border: Border.all(color: AppColors.navyLight(context), width: 1),
           ),
           child: Column(
             children: items.asMap().entries.map((e) {
@@ -251,17 +268,13 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      if (item.danger) {
-                        // Logout popup
-                        showLogoutDialog(context, onConfirm: () {
-                          // TODO: Your logout logic here
-                          // e.g., context.read<AuthBloc>().add(LogoutEvent());
-                        });
+                      if (item.isThemeToggle) {
+                        context.read<ThemeProvider>().toggle();
+                      } else if (item.danger) {
+                        showLogoutDialog(context, onConfirm: () {});
                       } else if (item.route != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => item.route!),
-                        );
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => item.route!));
                       }
                     },
                     child: Padding(
@@ -276,32 +289,34 @@ class ProfileScreen extends StatelessWidget {
                               color: item.color.withOpacity(0.15),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child:
-                            Icon(item.icon, color: item.color, size: 17),
+                            child: Icon(item.icon, color: item.color, size: 17),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              item.label,
-                              style: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: item.danger
-                                    ? AppColors.danger
-                                    : AppColors.textPrimary,
-                              ),
-                            ),
+                            child: Text(item.label,
+                                style: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: item.danger
+                                      ? AppColors.danger
+                                      : AppColors.textPrimary(context),
+                                )),
                           ),
-                          Icon(Icons.chevron_right_rounded,
-                              color: AppColors.textMuted, size: 18),
+                          // Inline toggle for theme row
+                          if (item.isThemeToggle)
+                            Consumer<ThemeProvider>(
+                              builder: (_, tp, __) => _ThemeSwitch(isDark: tp.isDark),
+                            )
+                          else
+                            Icon(Icons.chevron_right_rounded,
+                                color: AppColors.textMuted(context), size: 18),
                         ],
                       ),
                     ),
                   ),
                   if (i < items.length - 1)
-                    const Divider(
-                        height: 1, color: AppColors.navyLight, indent: 60),
+                    Divider(height: 1, color: AppColors.navyLight(context), indent: 60),
                 ],
               );
             }).toList(),
@@ -312,21 +327,94 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
+// ── Animated pill toggle ─────────────────────────────────────────────────────
+class _ThemeSwitch extends StatelessWidget {
+  final bool isDark;
+  const _ThemeSwitch({required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      width: 52,
+      height: 28,
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF243047) : AppColors.accent.withOpacity(0.25),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isDark ? AppColors.navyLight(context) : AppColors.accent.withOpacity(0.5),
+        ),
+      ),
+      child: Stack(
+        children: [
+          // Sun icon (left)
+          const Positioned(
+            left: 6,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: Icon(Icons.light_mode_rounded,
+                  size: 13, color: AppColors.accent),
+            ),
+          ),
+          // Moon icon (right)
+          Positioned(
+            right: 6,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: Icon(Icons.dark_mode_rounded,
+                  size: 13, color: AppColors.textMuted(context)),
+            ),
+          ),
+          // Sliding thumb
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            left: isDark ? 26 : 2,
+            top: 2,
+            child: Container(
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.accent : AppColors.accent,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.accent.withOpacity(0.4),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(
+                isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                size: 13,
+                color: const Color(0xFF0F1724),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Data model ───────────────────────────────────────────────────────────────
 class _MenuItem {
   final IconData icon;
   final String label;
   final Color color;
   final bool danger;
+  final bool isThemeToggle;
   final Widget? route;
 
   const _MenuItem(this.icon, this.label, this.color,
-      {this.danger = false, this.route});
+      {this.danger = false, this.isThemeToggle = false, this.route});
 }
 
-
-/// Call this function to show the logout confirmation dialog.
-/// Example usage:
-///   showLogoutDialog(context, onConfirm: () { /* your logout logic */ });
+// ── Logout dialog (unchanged logic) ─────────────────────────────────────────
 void showLogoutDialog(BuildContext context, {required VoidCallback onConfirm}) {
   showDialog(
     context: context,
@@ -347,56 +435,42 @@ class _LogoutDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: AppColors.navyMid,
+          color: AppColors.navyMid(context),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-              color: AppColors.danger.withOpacity(0.25), width: 1.5),
+          border: Border.all(color: AppColors.danger.withOpacity(0.25), width: 1.5),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icon
             Container(
-              width: 64,
-              height: 64,
+              width: 64, height: 64,
               decoration: BoxDecoration(
                 color: AppColors.danger.withOpacity(0.12),
                 shape: BoxShape.circle,
-                border: Border.all(
-                    color: AppColors.danger.withOpacity(0.3), width: 1.5),
+                border: Border.all(color: AppColors.danger.withOpacity(0.3), width: 1.5),
               ),
-              child: const Icon(Icons.logout_rounded,
-                  color: AppColors.danger, size: 28),
+              child: const Icon(Icons.logout_rounded, color: AppColors.danger, size: 28),
             ),
-
             const SizedBox(height: 18),
-
-            const Text(
-              'Log Out?',
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
-
+            Text('Log Out?',
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary(context),
+                )),
             const SizedBox(height: 8),
-
-            const Text(
+            Text(
               'You will be signed out of your account. Your reading progress and settings will be saved.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'DMSans',
                 fontSize: 13,
-                color: AppColors.textMuted,
+                color: AppColors.textMuted(context),
                 height: 1.5,
               ),
             ),
-
             const SizedBox(height: 24),
-
-            // Buttons
             Row(
               children: [
                 Expanded(
@@ -405,20 +479,18 @@ class _LogoutDialog extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 13),
                       decoration: BoxDecoration(
-                        color: AppColors.navyLight,
+                        color: AppColors.navyLight(context),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Center(
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            fontFamily: 'DMSans',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
+                      child: Center(
+                        child: Text('Cancel',
+                            style: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary(context),
+                            )),
                       ),
                     ),
                   ),
@@ -437,15 +509,13 @@ class _LogoutDialog extends StatelessWidget {
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: const Center(
-                        child: Text(
-                          'Log Out',
-                          style: TextStyle(
-                            fontFamily: 'DMSans',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: Text('Log Out',
+                            style: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            )),
                       ),
                     ),
                   ),

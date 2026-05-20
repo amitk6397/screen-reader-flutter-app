@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../main.dart';
-import '../../model/book_model.dart';
+
 import '../../res/app_colors.dart';
 import '../../routes/app_routes.dart';
 import '../../utils/text_style.dart';
-import '../custom_widgts/book_cover_widget.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -21,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -30,55 +28,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               const SizedBox(height: 16),
 
-              // Back button
+              // ── Back ──────────────────────────────────────────────────────
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Container(
-                  width: 36,
-                  height: 36,
+                  width: 36, height: 36,
                   decoration: BoxDecoration(
-                    color: AppColors.navyLight,
+                    color: AppColors.navyLight(context),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(Icons.arrow_back_ios_new_rounded,
-                      size: 16, color: AppColors.textPrimary),
+                  child: Icon(Icons.arrow_back_ios_new_rounded,
+                      size: 16, color: AppColors.textPrimary(context)),
                 ),
               ),
 
               const SizedBox(height: 24),
 
-              // Header
-              const Text('START FREE', style: AppTextStyles.labelLarge),
+              Text('START FREE',
+                  style: AppTextStyles.labelLarge.copyWith(
+                      color: AppColors.textMuted(context))),
               const SizedBox(height: 6),
-              const Text('Create your Account', style: AppTextStyles.displayMedium),
+              Text('Create your Account',
+                  style: AppTextStyles.displayMedium.copyWith(
+                      color: AppColors.textPrimary(context))),
 
               const SizedBox(height: 32),
 
-              // Full Name
-              _buildLabel('FULL NAME'),
+              _buildLabel(context, 'FULL NAME'),
               const SizedBox(height: 8),
-              _buildField(
-                hint: 'ex. Rahul Sharma',
-                icon: Icons.person_outline_rounded,
-              ),
+              _buildField(context,
+                  hint: 'ex. Rahul Sharma',
+                  icon: Icons.person_outline_rounded),
 
               const SizedBox(height: 18),
 
-              // Email
-              _buildLabel('EMAIL'),
+              _buildLabel(context, 'EMAIL'),
               const SizedBox(height: 8),
-              _buildField(
-                hint: 'you@example.com',
-                icon: Icons.mail_outline_rounded,
-                keyboardType: TextInputType.emailAddress,
-              ),
+              _buildField(context,
+                  hint: 'you@example.com',
+                  icon: Icons.mail_outline_rounded,
+                  keyboardType: TextInputType.emailAddress),
 
               const SizedBox(height: 18),
 
-              // Password
-              _buildLabel('PASSWORD'),
+              _buildLabel(context, 'PASSWORD'),
               const SizedBox(height: 8),
               _buildField(
+                context,
                 hint: 'Min. 8 characters',
                 icon: Icons.lock_outline_rounded,
                 obscure: _obscure,
@@ -96,7 +92,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               const SizedBox(height: 28),
 
-              // CTA
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -115,21 +110,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               const SizedBox(height: 16),
 
-              // Divider
               Row(
                 children: [
-                  const Expanded(child: Divider(color: AppColors.navyLight)),
+                  Expanded(
+                      child: Divider(color: AppColors.navyLight(context))),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('or', style: AppTextStyles.bodySmall),
+                    child: Text('or',
+                        style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textMuted(context))),
                   ),
-                  const Expanded(child: Divider(color: AppColors.navyLight)),
+                  Expanded(
+                      child: Divider(color: AppColors.navyLight(context))),
                 ],
               ),
 
               const SizedBox(height: 16),
 
-              // Footer
               Center(
                 child: GestureDetector(
                   onTap: () => Navigator.pushReplacement(
@@ -137,13 +134,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     MaterialPageRoute(builder: (_) => const LoginScreen()),
                   ),
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: 'Already a member? ',
                       style: TextStyle(
-                          color: AppColors.textMuted,
+                          color: AppColors.textMuted(context),
                           fontFamily: 'DMSans',
                           fontSize: 13),
-                      children: [
+                      children: const [
                         TextSpan(
                           text: 'Sign In',
                           style: TextStyle(
@@ -158,7 +155,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               const SizedBox(height: 20),
 
-              // Trust badges
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -176,43 +172,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: AppTextStyles.labelMedium,
-    );
-  }
+  Widget _buildLabel(BuildContext context, String text) => Text(
+    text,
+    style: AppTextStyles.labelMedium.copyWith(
+        color: AppColors.textMuted(context)),
+  );
 
-  Widget _buildField({
-    required String hint,
-    required IconData icon,
-    bool obscure = false,
-    TextInputType keyboardType = TextInputType.text,
-    Widget? suffixIcon,
-  }) {
+  Widget _buildField(
+      BuildContext context, {
+        required String hint,
+        required IconData icon,
+        bool obscure = false,
+        TextInputType keyboardType = TextInputType.text,
+        Widget? suffixIcon,
+      }) {
     return Container(
       height: 52,
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.navyLight, width: 1.5),
+        border: Border.all(color: AppColors.navyLight(context), width: 1.5),
       ),
       child: Row(
         children: [
           const SizedBox(width: 14),
-          Icon(icon, color: AppColors.textMuted, size: 20),
+          Icon(icon, color: AppColors.textMuted(context), size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
               obscureText: obscure,
               keyboardType: keyboardType,
-              style: const TextStyle(
-                  color: AppColors.textMuted,
+              style: TextStyle(
+                  color: AppColors.textPrimary(context),
                   fontFamily: 'DMSans',
                   fontSize: 14),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: AppTextStyles.bodyMedium,
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textMuted(context)),
                 border: InputBorder.none,
                 isDense: true,
               ),

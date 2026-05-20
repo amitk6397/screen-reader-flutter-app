@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import '../../res/app_colors.dart';
 import '../../routes/app_routes.dart';
 import '../../utils/text_style.dart';
-import 'register_screen.dart';
-import 'login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -62,22 +60,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
-            // Page View (Art Area)
+            // ── Page view (art area) ────────────────────────────────────────
             Expanded(
               flex: 5,
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (i) => setState(() => _currentPage = i),
                 itemCount: _pages.length,
-                itemBuilder: (_, i) => _OnboardPage(data: _pages[i]),
+                itemBuilder: (_, i) => _OnboardPage(
+                  data: _pages[i],
+                  navyMid: AppColors.navyMid(context),
+                ),
               ),
             ),
 
-            // Bottom Content
+            // ── Bottom content ──────────────────────────────────────────────
             Expanded(
               flex: 5,
               child: Padding(
@@ -99,7 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           decoration: BoxDecoration(
                             color: i == _currentPage
                                 ? AppColors.accent
-                                : AppColors.navyLight,
+                                : AppColors.navyLight(context),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -108,31 +109,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Title
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       child: Text(
                         _pages[_currentPage].title,
                         key: ValueKey(_currentPage),
-                        style: AppTextStyles.displayMedium,
+                        style: AppTextStyles.displayMedium.copyWith(
+                            color: AppColors.textPrimary(context)),
                       ),
                     ),
 
                     const SizedBox(height: 12),
 
-                    // Subtitle
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       child: Text(
                         _pages[_currentPage].subtitle,
                         key: ValueKey('sub$_currentPage'),
-                        style: AppTextStyles.bodyLarge,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                            color: AppColors.textMuted(context)),
                       ),
                     ),
 
                     const Spacer(),
 
-                    // Primary Button
                     SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -146,19 +146,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
 
-                    // const SizedBox(height: 12),
-                    //
-                    // // Secondary
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   height: 50,
-                    //   child: OutlinedButton(
-                    //     onPressed: () =>  Get.offNamed(AppRoutes.login
-                    //     ),
-                    //     child: const Text('Already have an account'),
-                    //   ),
-                    // ),
-
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -171,48 +158,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
+// ── Onboard page art ──────────────────────────────────────────────────────────
+
 class _OnboardPage extends StatelessWidget {
   final _OnboardData data;
-  const _OnboardPage({required this.data});
+  final Color navyMid;
+  const _OnboardPage({required this.data, required this.navyMid});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.navyMid,
+      color: navyMid,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Dashed rotating ring
           TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: 1),
             duration: const Duration(seconds: 10),
-            builder: (_, v, child) => Transform.rotate(
-              angle: v * 6.28,
-              child: child,
-            ),
+            builder: (_, v, child) =>
+                Transform.rotate(angle: v * 6.28, child: child),
             child: Container(
-              width: 160,
-              height: 160,
+              width: 160, height: 160,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: data.iconColor.withOpacity(0.25),
-                  width: 1.5,
-                  strokeAlign: BorderSide.strokeAlignOutside,
-                ),
+                    color: data.iconColor.withOpacity(0.25), width: 1.5),
               ),
             ),
           ),
-          // Inner glow circle
           Container(
-            width: 120,
-            height: 120,
+            width: 120, height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: data.iconColor.withOpacity(0.12),
             ),
           ),
-          // Icon
           Icon(data.icon, size: 52, color: data.iconColor),
         ],
       ),

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../res/app_colors.dart';
 import '../../utils/text_style.dart';
 import '../../view_model/after_login_ctr/book_reader_controller.dart';
-import 'book_reader_screen.dart';
+import '../after_login/book_reader_screen.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -19,22 +19,26 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   List<BookModel> get _filteredBooks {
     switch (_filter) {
-      case 1: return sampleBooks.where((b) => b.status == 'in_progress').toList();
-      case 2: return sampleBooks.where((b) => b.status == 'finished').toList();
-      case 3: return sampleBooks.where((b) => b.status == 'saved').toList();
-      default: return sampleBooks;
+      case 1:
+        return sampleBooks.where((b) => b.status == 'in_progress').toList();
+      case 2:
+        return sampleBooks.where((b) => b.status == 'finished').toList();
+      case 3:
+        return sampleBooks.where((b) => b.status == 'saved').toList();
+      default:
+        return sampleBooks;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ────────────────────────────────────────────────────────
+            // ── Header ────────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
               child: Row(
@@ -42,20 +46,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('My Library', style: AppTextStyles.displaySmall),
+                      Text('My Library',
+                          style: AppTextStyles.displaySmall.copyWith(
+                              color: AppColors.textPrimary(context))),
                       const SizedBox(height: 2),
                       Text('${sampleBooks.length} books · 3 in progress',
-                          style: AppTextStyles.bodySmall),
+                          style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.textMuted(context))),
                     ],
                   ),
                   const Spacer(),
                   Container(
-                    width: 38,
-                    height: 38,
+                    width: 38, height: 38,
                     decoration: BoxDecoration(
-                      color: AppColors.navyMid,
+                      color: AppColors.navyMid(context),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.navyLight),
+                      border: Border.all(
+                          color: AppColors.navyLight(context)),
                     ),
                     child: const Icon(Icons.add_rounded,
                         color: AppColors.accent, size: 20),
@@ -66,7 +73,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
             const SizedBox(height: 16),
 
-            // ── Filter chips ──────────────────────────────────────────────────
+            // ── Filter chips ──────────────────────────────────────────────
             SizedBox(
               height: 36,
               child: ListView.builder(
@@ -83,10 +90,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: sel ? AppColors.accent : AppColors.navyMid,
+                        color: sel
+                            ? AppColors.accent
+                            : AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: sel ? AppColors.accent : AppColors.navyLight,
+                          color: sel
+                              ? AppColors.accent
+                              : AppColors.navyLight(context),
                           width: 1.5,
                         ),
                       ),
@@ -96,7 +107,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           fontFamily: 'DMSans',
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: sel ? AppColors.navy : AppColors.textMuted,
+                          color: sel
+                              ? AppColors.navy(context)
+                              : AppColors.textMuted(context),
                         ),
                       ),
                     ),
@@ -107,7 +120,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
             const SizedBox(height: 16),
 
-            // ── Book List ─────────────────────────────────────────────────────
+            // ── Book list ─────────────────────────────────────────────────
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -124,7 +137,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 }
 
-// ─── Library Item ──────────────────────────────────────────────────────────────
+// ─── Library item ─────────────────────────────────────────────────────────────
 
 class _LibraryItem extends StatelessWidget {
   final BookModel book;
@@ -132,22 +145,20 @@ class _LibraryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get controller without re-registering
     final reader = Get.put(ScreenReaderController());
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.navyLight, width: 1),
+        border: Border.all(color: AppColors.navyLight(context), width: 1),
       ),
       child: Row(
         children: [
-          // ── Cover ──────────────────────────────────────────────────────────
+          // Cover
           Container(
-            width: 44,
-            height: 58,
+            width: 44, height: 58,
             decoration: BoxDecoration(
               color: book.coverColor,
               borderRadius: BorderRadius.circular(10),
@@ -158,24 +169,27 @@ class _LibraryItem extends StatelessWidget {
 
           const SizedBox(width: 14),
 
-          // ── Info ───────────────────────────────────────────────────────────
+          // Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(book.title,
-                    style: AppTextStyles.headingSmall,
+                    style: AppTextStyles.headingSmall.copyWith(
+                        color: AppColors.textPrimary(context)),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 2),
-                Text(book.author, style: AppTextStyles.bodySmall),
+                Text(book.author,
+                    style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textMuted(context))),
                 const SizedBox(height: 8),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
                     value: book.progress,
                     minHeight: 3,
-                    backgroundColor: AppColors.navyLight,
+                    backgroundColor: AppColors.navyLight(context),
                     valueColor:
                     AlwaysStoppedAnimation<Color>(book.coverColor),
                   ),
@@ -196,10 +210,9 @@ class _LibraryItem extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          // ── Play button → open BookReaderScreen ────────────────────────────
+          // Play button
           GestureDetector(
             onTap: () {
-              // Stop any current speech before opening new book
               reader.stop();
               Get.to(
                     () => BookReaderScreen(book: book),
@@ -207,8 +220,7 @@ class _LibraryItem extends StatelessWidget {
               );
             },
             child: Container(
-              width: 36,
-              height: 36,
+              width: 36, height: 36,
               decoration: BoxDecoration(
                 color: book.coverColor.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),

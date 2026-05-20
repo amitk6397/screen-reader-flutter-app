@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../main.dart';
-import '../../routes/app_routes.dart';
-import 'register_screen.dart';
-import '../../model/book_model.dart';
 import '../../res/app_colors.dart';
+import '../../routes/app_routes.dart';
 import '../../utils/text_style.dart';
-import '../custom_widgts/book_cover_widget.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -31,32 +28,36 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 16),
 
-              // Back
+              // ── Back ──────────────────────────────────────────────────────
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Container(
-                  width: 36,
-                  height: 36,
+                  width: 36, height: 36,
                   decoration: BoxDecoration(
-                    color: AppColors.navyLight,
+                    color: AppColors.navyLight(context),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(Icons.arrow_back_ios_new_rounded,
-                      size: 16, color: AppColors.textPrimary),
+                  child: Icon(Icons.arrow_back_ios_new_rounded,
+                      size: 16, color: AppColors.textPrimary(context)),
                 ),
               ),
 
               const SizedBox(height: 24),
 
-              const Text('WELCOME BACK', style: AppTextStyles.labelLarge),
+              Text('WELCOME BACK',
+                  style: AppTextStyles.labelLarge.copyWith(
+                      color: AppColors.textMuted(context))),
               const SizedBox(height: 6),
-              const Text('Login to Audiara', style: AppTextStyles.displayMedium),
+              Text('Login to Audiara',
+                  style: AppTextStyles.displayMedium.copyWith(
+                      color: AppColors.textPrimary(context))),
 
               const SizedBox(height: 32),
 
-              _buildLabel('EMAIL'),
+              _buildLabel(context, 'EMAIL'),
               const SizedBox(height: 8),
               _buildField(
+                context,
                 hint: 'you@example.com',
                 icon: Icons.mail_outline_rounded,
                 keyboardType: TextInputType.emailAddress,
@@ -64,9 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 18),
 
-              _buildLabel('PASSWORD'),
+              _buildLabel(context, 'PASSWORD'),
               const SizedBox(height: 8),
               _buildField(
+                context,
                 hint: 'Your password',
                 icon: Icons.lock_outline_rounded,
                 obscure: _obscure,
@@ -84,7 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 10),
 
-              // Forgot password
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
@@ -104,8 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-
-                  onPressed: () =>  Get.offNamed(AppRoutes.mySheel),
+                  onPressed: () => Get.offNamed(AppRoutes.mySheel),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
@@ -121,34 +121,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
               Row(
                 children: [
-                  const Expanded(child: Divider(color: AppColors.navyLight)),
+                  Expanded(
+                      child: Divider(color: AppColors.navyLight(context))),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text('or continue with',
-                        style: AppTextStyles.bodySmall),
+                        style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textMuted(context))),
                   ),
-                  const Expanded(child: Divider(color: AppColors.navyLight)),
+                  Expanded(
+                      child: Divider(color: AppColors.navyLight(context))),
                 ],
               ),
 
               const SizedBox(height: 16),
 
-              // Social buttons
               Row(
                 children: [
                   Expanded(
-                    child: _socialBtn(
-                      icon: Icons.g_mobiledata_rounded,
-                      label: 'Google',
-                    ),
-                  ),
+                      child: _socialBtn(context,
+                          icon: Icons.g_mobiledata_rounded, label: 'Google')),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: _socialBtn(
-                      icon: Icons.apple_rounded,
-                      label: 'Apple',
-                    ),
-                  ),
+                      child: _socialBtn(context,
+                          icon: Icons.apple_rounded, label: 'Apple')),
                 ],
               ),
 
@@ -161,13 +157,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     MaterialPageRoute(builder: (_) => const RegisterScreen()),
                   ),
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: 'New here? ',
                       style: TextStyle(
-                          color: AppColors.textMuted,
+                          color: AppColors.textMuted(context),
                           fontFamily: 'DMSans',
                           fontSize: 13),
-                      children: [
+                      children: const [
                         TextSpan(
                           text: 'Create Account',
                           style: TextStyle(
@@ -188,39 +184,44 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLabel(String text) =>
-      Text(text, style: AppTextStyles.labelMedium);
+  Widget _buildLabel(BuildContext context, String text) => Text(
+    text,
+    style: AppTextStyles.labelMedium.copyWith(
+        color: AppColors.textMuted(context)),
+  );
 
-  Widget _buildField({
-    required String hint,
-    required IconData icon,
-    bool obscure = false,
-    TextInputType keyboardType = TextInputType.text,
-    Widget? suffixIcon,
-  }) {
+  Widget _buildField(
+      BuildContext context, {
+        required String hint,
+        required IconData icon,
+        bool obscure = false,
+        TextInputType keyboardType = TextInputType.text,
+        Widget? suffixIcon,
+      }) {
     return Container(
       height: 52,
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.navyLight, width: 1.5),
+        border: Border.all(color: AppColors.navyLight(context), width: 1.5),
       ),
       child: Row(
         children: [
           const SizedBox(width: 14),
-          Icon(icon, color: AppColors.textMuted, size: 20),
+          Icon(icon, color: AppColors.textMuted(context), size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
               obscureText: obscure,
               keyboardType: keyboardType,
-              style: const TextStyle(
-                  color: AppColors.textMuted,
+              style: TextStyle(
+                  color: AppColors.textPrimary(context),
                   fontFamily: 'DMSans',
                   fontSize: 14),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: AppTextStyles.bodyMedium,
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textMuted(context)),
                 border: InputBorder.none,
                 isDense: true,
               ),
@@ -235,22 +236,23 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _socialBtn({required IconData icon, required String label}) {
+  Widget _socialBtn(BuildContext context,
+      {required IconData icon, required String label}) {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.navyLight, width: 1.5),
+        border: Border.all(color: AppColors.navyLight(context), width: 1.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: AppColors.textMuted, size: 22),
+          Icon(icon, color: AppColors.textMuted(context), size: 22),
           const SizedBox(width: 8),
           Text(label,
-              style: const TextStyle(
-                  color: AppColors.textMuted,
+              style: TextStyle(
+                  color: AppColors.textMuted(context),
                   fontFamily: 'DMSans',
                   fontSize: 13,
                   fontWeight: FontWeight.w500)),

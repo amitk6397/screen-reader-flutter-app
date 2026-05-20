@@ -3,7 +3,6 @@ import '../../model/book_model.dart';
 import '../../res/app_colors.dart';
 import '../../utils/text_style.dart';
 
-
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
 
@@ -52,29 +51,31 @@ class _PlayerScreenState extends State<PlayerScreen>
     const totalSec = 2890;
 
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
-            // Header
+            // ── Header ─────────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
               child: Row(
                 children: [
-                  const Icon(Icons.keyboard_arrow_down_rounded,
-                      color: AppColors.textPrimary, size: 28),
+                  Icon(Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.textPrimary(context), size: 28),
                   const Spacer(),
-                  Text('NOW PLAYING', style: AppTextStyles.labelMedium),
+                  Text('NOW PLAYING',
+                      style: AppTextStyles.labelMedium.copyWith(
+                          color: AppColors.textMuted(context))),
                   const Spacer(),
-                  const Icon(Icons.more_vert_rounded,
-                      color: AppColors.textPrimary, size: 22),
+                  Icon(Icons.more_vert_rounded,
+                      color: AppColors.textPrimary(context), size: 22),
                 ],
               ),
             ),
 
             const SizedBox(height: 20),
 
-            // Art
+            // ── Art ────────────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: AnimatedBuilder(
@@ -82,12 +83,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                 builder: (_, child) => Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Pulse rings
                     Transform.scale(
                       scale: _isPlaying ? _pulseAnim.value * 1.1 : 1.0,
                       child: Container(
-                        width: 240,
-                        height: 240,
+                        width: 240, height: 240,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _book.coverColor.withOpacity(0.05),
@@ -97,33 +96,29 @@ class _PlayerScreenState extends State<PlayerScreen>
                     Transform.scale(
                       scale: _isPlaying ? _pulseAnim.value : 1.0,
                       child: Container(
-                        width: 200,
-                        height: 200,
+                        width: 200, height: 200,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _book.coverColor.withOpacity(0.1),
                         ),
                       ),
                     ),
-                    // Art box
                     Container(
-                      width: 200,
-                      height: 200,
+                      width: 200, height: 200,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(28),
-                        border:
-                        Border.all(color: AppColors.navyLight, width: 1.5),
+                        border: Border.all(
+                            color: AppColors.navyLight(context), width: 1.5),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.headphones_rounded,
+                          const Icon(Icons.headphones_rounded,
                               color: AppColors.accent, size: 64),
                           const SizedBox(height: 8),
                           Container(
-                            height: 3,
-                            width: 40,
+                            height: 3, width: 40,
                             decoration: BoxDecoration(
                               color: AppColors.accent.withOpacity(0.4),
                               borderRadius: BorderRadius.circular(10),
@@ -139,7 +134,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
             const SizedBox(height: 24),
 
-            // Title + heart
+            // ── Title + heart ──────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
@@ -149,17 +144,21 @@ class _PlayerScreenState extends State<PlayerScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(_book.currentChapter,
-                            style: AppTextStyles.labelLarge),
+                            style: AppTextStyles.labelLarge.copyWith(
+                                color: AppColors.textMuted(context))),
                         const SizedBox(height: 4),
-                        Text(_book.title, style: AppTextStyles.displaySmall),
+                        Text(_book.title,
+                            style: AppTextStyles.displaySmall.copyWith(
+                                color: AppColors.textPrimary(context))),
                         const SizedBox(height: 2),
-                        Text(_book.author, style: AppTextStyles.bodyMedium),
+                        Text(_book.author,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.textMuted(context))),
                       ],
                     ),
                   ),
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: 40, height: 40,
                     decoration: BoxDecoration(
                       color: AppColors.accentDim,
                       borderRadius: BorderRadius.circular(12),
@@ -173,7 +172,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
             const SizedBox(height: 20),
 
-            // Seek bar
+            // ── Seek bar ───────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
@@ -185,7 +184,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                           enabledThumbRadius: 7),
                       overlayShape: SliderComponentShape.noOverlay,
                       activeTrackColor: AppColors.accent,
-                      inactiveTrackColor: AppColors.navyLight,
+                      inactiveTrackColor: AppColors.navyLight(context),
                       thumbColor: Colors.white,
                     ),
                     child: Slider(
@@ -199,9 +198,11 @@ class _PlayerScreenState extends State<PlayerScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(_formatTime(_progress, totalSec),
-                            style: AppTextStyles.bodySmall),
+                            style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.textMuted(context))),
                         Text(_formatTime(1.0, totalSec),
-                            style: AppTextStyles.bodySmall),
+                            style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.textMuted(context))),
                       ],
                     ),
                   ),
@@ -211,20 +212,19 @@ class _PlayerScreenState extends State<PlayerScreen>
 
             const SizedBox(height: 16),
 
-            // Controls
+            // ── Controls ───────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _ctrlBtn(Icons.replay_10_rounded),
-                  _ctrlBtn(Icons.skip_previous_rounded),
-                  // Play/Pause
+                  _ctrlBtn(context, Icons.replay_10_rounded),
+                  _ctrlBtn(context, Icons.skip_previous_rounded),
                   GestureDetector(
-                    onTap: () => setState(() => _isPlaying = !_isPlaying),
+                    onTap: () =>
+                        setState(() => _isPlaying = !_isPlaying),
                     child: Container(
-                      width: 64,
-                      height: 64,
+                      width: 64, height: 64,
                       decoration: BoxDecoration(
                         color: AppColors.accent,
                         borderRadius: BorderRadius.circular(20),
@@ -233,20 +233,20 @@ class _PlayerScreenState extends State<PlayerScreen>
                         _isPlaying
                             ? Icons.pause_rounded
                             : Icons.play_arrow_rounded,
-                        color: AppColors.navy,
+                        color: AppColors.navy(context),
                         size: 32,
                       ),
                     ),
                   ),
-                  _ctrlBtn(Icons.skip_next_rounded),
-                  _ctrlBtn(Icons.forward_10_rounded),
+                  _ctrlBtn(context, Icons.skip_next_rounded),
+                  _ctrlBtn(context, Icons.forward_10_rounded),
                 ],
               ),
             ),
 
             const SizedBox(height: 20),
 
-            // Speed chips
+            // ── Speed chips ────────────────────────────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(_speeds.length, (i) {
@@ -259,12 +259,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
-                      color: sel ? AppColors.accentDim : AppColors.navyMid,
+                      color: sel
+                          ? AppColors.accentDim
+                          : AppColors.navyMid(context),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: sel
                             ? AppColors.accentBorder
-                            : AppColors.navyLight,
+                            : AppColors.navyLight(context),
                         width: 1.5,
                       ),
                     ),
@@ -274,7 +276,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                         fontFamily: 'DMSans',
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: sel ? AppColors.accent : AppColors.textMuted,
+                        color: sel
+                            ? AppColors.accent
+                            : AppColors.textMuted(context),
                       ),
                     ),
                   ),
@@ -289,14 +293,13 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  Widget _ctrlBtn(IconData icon) {
+  Widget _ctrlBtn(BuildContext context, IconData icon) {
     return Container(
-      width: 46,
-      height: 46,
+      width: 46, height: 46,
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight, width: 1),
+        border: Border.all(color: AppColors.navyLight(context), width: 1),
       ),
       child: Icon(icon, color: AppColors.textSecondary, size: 22),
     );
