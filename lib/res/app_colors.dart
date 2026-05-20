@@ -36,4 +36,62 @@ class AppColors {
   static const Color coverOrange = Color(0xFF993C1D);
   static const Color coverTeal = Color(0xFF0F6E56);
   static const Color coverPink = Color(0xFF993556);
+
+  // Primary Colors
+  static const Color primary = Color(0xFF06192B);
+  static const Color lightBlue = Color(0xFFE2F5FF);
+
+  // Background Colors
+  static const Color background = Color(0xFFF7F5F1);
+
+  // Text Colors
+
+  static const Color hintText = Color(0xFFBDBDBD);
+
+  // Button Colors
+  static const Color button = primary;
+  static const Color blue = Color(0xFF059AE4);
+  static const Color buttonText = Color(0xFF000000);
+
+  // Border & Divider
+  static const Color divider = Color(0xFFF2F2F2);
+
+  // Status Colors
+
+  static const Color error = Color(0xFFEB5757);
+
+
+  // Other
+  static const Color transparent = Colors.transparent;
+
+  static const grey = Colors.grey;
+
+  static const grey50 = Color(0xFFF5F5F5); // same as Colors.grey[50]
+  static const grey100 = Color(0xFFF0F0F0);
+  static const grey200 = Color(0xFFEEEEEE);
+  static const grey300 = Color(0xFFE0E0E0);
+  static const grey400 = Color(0xFFBDBDBD);
+  static const grey500 = Colors.grey;
+  static const grey600 = Color(0xFF757575);
+  static const grey700 = Color(0xFF616161);
+  static const grey800 = Color(0xFF424242);
+  static const grey900 = Color(0xFF212121);
+
+  // Black variants
+  static const black = Colors.black;
+  static const black87 = Colors.black87;
+  static const black54 = Colors.black54;
+  static const black45 = Colors.black45;
+  static const black12 = Colors.black12;
+
+  // White variants
+  static const white = Colors.white;
+  static const white70 = Colors.white70;
+  static const white54 = Colors.white54;
+  static const white38 = Colors.white38;
+  static const white30 = Colors.white30;
+
+  static const yellow = Color(0xFFDBBC00);
+
+  static const orange = Colors.deepOrange;
 }
