@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 
 class SleepTimerScreen extends StatefulWidget {
   const SleepTimerScreen({super.key});
@@ -28,7 +28,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -43,16 +43,20 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.textMuted(context), size: 16),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Sleep Timer', style: AppTextStyles.displaySmall),
+                  Text('Sleep Timer',
+                      style: text24(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context)),
                 ],
               ),
             ),
@@ -70,7 +74,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 28),
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                             color: AppColors.coverPurple.withOpacity(0.3), width: 1.5),
@@ -97,11 +101,10 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                                 : _selectedMinutes! >= 60
                                 ? '${_selectedMinutes! ~/ 60}h ${_selectedMinutes! % 60 == 0 ? '' : '${_selectedMinutes! % 60}m'}'
                                 : '$_selectedMinutes min',
-                            style: const TextStyle(
-                              fontFamily: 'PlayfairDisplay',
-                              fontSize: 36,
+                            style: text40(
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: AppColors.textPrimary(context),
+                              context: context,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -109,10 +112,9 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                             _selectedMinutes == null
                                 ? 'Sleep timer is off'
                                 : 'Playback will stop after this time',
-                            style: const TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 12,
-                              color: AppColors.textMuted,
+                            style: text12(
+                              color: AppColors.textMuted(context),
+                              context: context,
                             ),
                           ),
                         ],
@@ -124,7 +126,11 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                     // Presets
                     Padding(
                       padding: const EdgeInsets.only(left: 2, bottom: 10),
-                      child: Text('DURATION', style: AppTextStyles.labelMedium),
+                      child: Text('DURATION',
+                          style: text12(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textMuted(context),
+                              context: context)),
                     ),
 
                     // Off option
@@ -137,12 +143,12 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                         decoration: BoxDecoration(
                           color: _selectedMinutes == null
                               ? AppColors.danger.withOpacity(0.1)
-                              : AppColors.navyMid,
+                              : AppColors.navyMid(context),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: _selectedMinutes == null
                                 ? AppColors.danger
-                                : AppColors.navyLight,
+                                : AppColors.navyLight(context),
                             width: _selectedMinutes == null ? 1.5 : 1,
                           ),
                         ),
@@ -155,7 +161,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                               fontWeight: FontWeight.w600,
                               color: _selectedMinutes == null
                                   ? AppColors.danger
-                                  : AppColors.textMuted,
+                                  : AppColors.textMuted(context),
                             ),
                           ),
                         ),
@@ -183,12 +189,12 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? AppColors.coverPurple.withOpacity(0.15)
-                                  : AppColors.navyMid,
+                                  : AppColors.navyMid(context),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: isSelected
                                     ? AppColors.coverPurple
-                                    : AppColors.navyLight,
+                                    : AppColors.navyLight(context),
                                 width: isSelected ? 1.5 : 1,
                               ),
                             ),
@@ -201,7 +207,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                                   fontWeight: FontWeight.w600,
                                   color: isSelected
                                       ? AppColors.coverPurple
-                                      : AppColors.textMuted,
+                                      : AppColors.textMuted(context),
                                 ),
                               ),
                             ),
@@ -215,7 +221,11 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                     // Options
                     Padding(
                       padding: const EdgeInsets.only(left: 2, bottom: 10),
-                      child: Text('OPTIONS', style: AppTextStyles.labelMedium),
+                      child: Text('OPTIONS',
+                          style: text12(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textMuted(context),
+                              context: context)),
                     ),
                     _toggleTile(
                       'Fade Out Audio',
@@ -252,10 +262,9 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                         ),
                         child: Text(
                           _selectedMinutes == null ? 'Timer Off' : 'Start Timer',
-                          style: const TextStyle(
-                            fontFamily: 'DMSans',
-                            fontSize: 15,
+                          style: text15(
                             fontWeight: FontWeight.w700,
+                            context: context,
                           ),
                         ),
                       ),
@@ -276,9 +285,9 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight),
+        border: Border.all(color: AppColors.navyLight(context)),
       ),
       child: Row(
         children: [
@@ -297,17 +306,15 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 14,
+                    style: text14(
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: AppColors.textPrimary(context),
+                      context: context,
                     )),
                 Text(subtitle,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 11,
-                      color: AppColors.textMuted,
+                    style: text11(
+                      color: AppColors.textMuted(context),
+                      context: context,
                     )),
               ],
             ),
@@ -317,8 +324,8 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
             onChanged: onChanged,
             activeColor: AppColors.coverPurple,
             activeTrackColor: AppColors.coverPurple.withOpacity(0.3),
-            inactiveTrackColor: AppColors.navyLight,
-            inactiveThumbColor: AppColors.textMuted,
+            inactiveTrackColor: AppColors.navyLight(context),
+            inactiveThumbColor: AppColors.textMuted(context),
           ),
         ],
       ),

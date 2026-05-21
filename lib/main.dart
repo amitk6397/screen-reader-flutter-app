@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:screen_reader/res/app_colors.dart';
 import 'package:screen_reader/routes/app_pages.dart';
 import 'package:screen_reader/routes/app_routes.dart';
+import 'package:screen_reader/utils/textstyle.dart';
 import 'package:screen_reader/view_model/global_controller/theme_controller.dart';
 import 'package:screen_reader/views/after_login/home_screen.dart';
 import 'package:screen_reader/views/after_login/library_screen.dart';
@@ -24,15 +25,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeCtrl = Get.find<ThemeProvider>();
-    return Obx(() => GetMaterialApp(
-      title: 'Screen Reader',
-      debugShowCheckedModeBanner: false,
-      theme: _lightTheme,
-      darkTheme: _darkTheme,
-      themeMode: themeCtrl.themeMode,
-      initialRoute: AppRoutes.splash,
-      getPages: AppPages.pages,
-    ));
+    return Obx(
+      () => GetMaterialApp(
+        title: 'Screen Reader',
+        debugShowCheckedModeBanner: false,
+        theme: _lightTheme,
+        darkTheme: _darkTheme,
+        themeMode: themeCtrl.themeMode,
+        initialRoute: AppRoutes.splash,
+        getPages: AppPages.pages,
+      ),
+    );
   }
 }
 
@@ -76,10 +79,14 @@ class _MainShellState extends State<MainShell> {
   ];
 
   final List<_NavItem> _navItems = const [
-    _NavItem(Icons.home_rounded,         Icons.home_outlined,          'Home'),
-    _NavItem(Icons.auto_stories_rounded, Icons.auto_stories_outlined,  'Library'),
-    _NavItem(Icons.headphones_rounded,   Icons.headphones_outlined,    'Player'),
-    _NavItem(Icons.person_rounded,       Icons.person_outline_rounded, 'Profile'),
+    _NavItem(Icons.home_rounded, Icons.home_outlined, 'Home'),
+    _NavItem(
+      Icons.auto_stories_rounded,
+      Icons.auto_stories_outlined,
+      'Library',
+    ),
+    _NavItem(Icons.headphones_rounded, Icons.headphones_outlined, 'Player'),
+    _NavItem(Icons.person_rounded, Icons.person_outline_rounded, 'Profile'),
   ];
 
   @override
@@ -91,8 +98,9 @@ class _MainShellState extends State<MainShell> {
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         systemNavigationBarColor: AppColors.navyMid(context),
-        systemNavigationBarIconBrightness:
-        isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness: isDark
+            ? Brightness.light
+            : Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: AppColors.navy(context),
@@ -116,19 +124,19 @@ class _MainShellState extends State<MainShell> {
             boxShadow: isDark
                 ? []
                 : [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 12,
-                offset: const Offset(0, -2),
-              )
-            ],
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 12,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
           ),
           child: SafeArea(
             child: SizedBox(
               height: 62,
               child: Row(
                 children: List.generate(_navItems.length, (i) {
-                  final item     = _navItems[i];
+                  final item = _navItems[i];
                   final selected = i == _currentIndex;
                   return Expanded(
                     child: GestureDetector(
@@ -142,7 +150,8 @@ class _MainShellState extends State<MainShell> {
                         children: [
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 250),
-                            width: 44, height: 36,
+                            width: 44,
+                            height: 36,
                             decoration: BoxDecoration(
                               color: selected
                                   ? AppColors.accentDim
@@ -160,9 +169,8 @@ class _MainShellState extends State<MainShell> {
                           const SizedBox(height: 3),
                           AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 250),
-                            style: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 10,
+                            style: text10(
+                              context: context,
                               fontWeight: selected
                                   ? FontWeight.w700
                                   : FontWeight.w500,

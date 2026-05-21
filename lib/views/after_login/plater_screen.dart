@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../model/book_model.dart';
 import '../../res/app_colors.dart';
-import '../../utils/text_style.dart';
+import 'package:screen_reader/utils/textstyle.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -15,10 +16,13 @@ class _PlayerScreenState extends State<PlayerScreen>
   bool _isPlaying = true;
   double _progress = 0.38;
   int _selectedSpeed = 2; // 1.25x
+
   late AnimationController _pulseController;
   late Animation<double> _pulseAnim;
 
   final List<String> _speeds = ['0.75×', '1×', '1.25×', '1.5×', '2×'];
+
+  // Sample book (replace with actual data passing later)
   final BookModel _book = sampleBooks[0];
 
   @override
@@ -28,7 +32,8 @@ class _PlayerScreenState extends State<PlayerScreen>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _pulseAnim = Tween<double>(begin: 1.0, end: 1.15).animate(
+
+    _pulseAnim = Tween<double>(begin: 1.0, end: 1.18).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
   }
@@ -40,10 +45,10 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   String _formatTime(double ratio, int totalSec) {
-    final s = (ratio * totalSec).toInt();
-    final m = s ~/ 60;
-    final sec = s % 60;
-    return '${m.toString().padLeft(2, '0')}:${sec.toString().padLeft(2, '0')}';
+    final seconds = (ratio * totalSec).toInt();
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -55,72 +60,101 @@ class _PlayerScreenState extends State<PlayerScreen>
       body: SafeArea(
         child: Column(
           children: [
-            // ── Header ─────────────────────────────────────────────────────
+            // Header
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Row(
                 children: [
-                  Icon(Icons.keyboard_arrow_down_rounded,
-                      color: AppColors.textPrimary(context), size: 28),
+                  IconButton(
+                    icon: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.textPrimary(context),
+                      size: 28,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                   const Spacer(),
-                  Text('NOW PLAYING',
-                      style: AppTextStyles.labelMedium.copyWith(
-                          color: AppColors.textMuted(context))),
+                  Text(
+                    'NOW PLAYING',
+                    style: text14(
+                      color: AppColors.textMuted(context),
+                      fontWeight: FontWeight.w500,
+                      context: context,
+                    ),
+                  ),
                   const Spacer(),
-                  Icon(Icons.more_vert_rounded,
-                      color: AppColors.textPrimary(context), size: 22),
+                  IconButton(
+                    icon: Icon(
+                      Icons.more_vert_rounded,
+                      color: AppColors.textPrimary(context),
+                      size: 24,
+                    ),
+                    onPressed: () {},
+                  ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
 
-            // ── Art ────────────────────────────────────────────────────────
+            // Album Art with Pulse Effect
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: AnimatedBuilder(
                 animation: _pulseController,
-                builder: (_, child) => Stack(
+                builder: (_, __) => Stack(
                   alignment: Alignment.center,
                   children: [
+                    // Outer glow
                     Transform.scale(
-                      scale: _isPlaying ? _pulseAnim.value * 1.1 : 1.0,
+                      scale: _isPlaying ? _pulseAnim.value * 1.12 : 1.0,
                       child: Container(
-                        width: 240, height: 240,
+                        width: 260,
+                        height: 260,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: _book.coverColor.withOpacity(0.05),
+                          color: _book.coverColor.withOpacity(0.06),
                         ),
                       ),
                     ),
+                    // Inner glow
                     Transform.scale(
                       scale: _isPlaying ? _pulseAnim.value : 1.0,
                       child: Container(
-                        width: 200, height: 200,
+                        width: 220,
+                        height: 220,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: _book.coverColor.withOpacity(0.1),
+                          color: _book.coverColor.withOpacity(0.12),
                         ),
                       ),
                     ),
+                    // Main Cover
                     Container(
-                      width: 200, height: 200,
+                      width: 200,
+                      height: 200,
                       decoration: BoxDecoration(
                         color: AppColors.navyMid(context),
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius: BorderRadius.circular(30),
                         border: Border.all(
-                            color: AppColors.navyLight(context), width: 1.5),
+                          color: AppColors.navyLight(context),
+                          width: 2,
+                        ),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.headphones_rounded,
-                              color: AppColors.accent, size: 64),
-                          const SizedBox(height: 8),
+                          Icon(
+                            Icons.headphones_rounded,
+                            color: AppColors.accent,
+                            size: 68,
+                          ),
+                          const SizedBox(height: 12),
                           Container(
-                            height: 3, width: 40,
+                            height: 4,
+                            width: 48,
                             decoration: BoxDecoration(
-                              color: AppColors.accent.withOpacity(0.4),
+                              color: AppColors.accent.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
@@ -132,56 +166,76 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
 
-            // ── Title + heart ──────────────────────────────────────────────
+            // Book Info
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(_book.currentChapter,
-                            style: AppTextStyles.labelLarge.copyWith(
-                                color: AppColors.textMuted(context))),
+                        Text(
+                          _book.currentChapter,
+                          style: text14(
+                            color: AppColors.textMuted(context),
+                            context: context,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          _book.title,
+                          style: text24(
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary(context),
+                            context: context,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         const SizedBox(height: 4),
-                        Text(_book.title,
-                            style: AppTextStyles.displaySmall.copyWith(
-                                color: AppColors.textPrimary(context))),
-                        const SizedBox(height: 2),
-                        Text(_book.author,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.textMuted(context))),
+                        Text(
+                          _book.author,
+                          style: text16(
+                            color: AppColors.textMuted(context),
+                            context: context,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   Container(
-                    width: 40, height: 40,
+                    width: 48,
+                    height: 48,
                     decoration: BoxDecoration(
                       color: AppColors.accentDim,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                    child: const Icon(Icons.favorite_border_rounded,
-                        color: AppColors.accent, size: 20),
+                    child: Icon(
+                      Icons.favorite_border_rounded,
+                      color: AppColors.accent,
+                      size: 24,
+                    ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 28),
 
-            // ── Seek bar ───────────────────────────────────────────────────
+            // Progress Slider
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   SliderTheme(
                     data: SliderThemeData(
-                      trackHeight: 4,
+                      trackHeight: 5,
                       thumbShape: const RoundSliderThumbShape(
-                          enabledThumbRadius: 7),
+                        enabledThumbRadius: 8,
+                      ),
                       overlayShape: SliderComponentShape.noOverlay,
                       activeTrackColor: AppColors.accent,
                       inactiveTrackColor: AppColors.navyLight(context),
@@ -189,20 +243,28 @@ class _PlayerScreenState extends State<PlayerScreen>
                     ),
                     child: Slider(
                       value: _progress,
-                      onChanged: (v) => setState(() => _progress = v),
+                      onChanged: (value) => setState(() => _progress = value),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(_formatTime(_progress, totalSec),
-                            style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textMuted(context))),
-                        Text(_formatTime(1.0, totalSec),
-                            style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textMuted(context))),
+                        Text(
+                          _formatTime(_progress, totalSec),
+                          style: text13(
+                            color: AppColors.textMuted(context),
+                            context: context,
+                          ),
+                        ),
+                        Text(
+                          _formatTime(1.0, totalSec),
+                          style: text13(
+                            color: AppColors.textMuted(context),
+                            context: context,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -210,31 +272,31 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // ── Controls ───────────────────────────────────────────────────
+            // Playback Controls
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _ctrlBtn(context, Icons.replay_10_rounded),
                   _ctrlBtn(context, Icons.skip_previous_rounded),
                   GestureDetector(
-                    onTap: () =>
-                        setState(() => _isPlaying = !_isPlaying),
+                    onTap: () => setState(() => _isPlaying = !_isPlaying),
                     child: Container(
-                      width: 64, height: 64,
+                      width: 72,
+                      height: 72,
                       decoration: BoxDecoration(
                         color: AppColors.accent,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                       child: Icon(
                         _isPlaying
                             ? Icons.pause_rounded
                             : Icons.play_arrow_rounded,
-                        color: AppColors.navy(context),
-                        size: 32,
+                        color: Colors.black,
+                        size: 36,
                       ),
                     ),
                   ),
@@ -244,46 +306,50 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 32),
 
-            // ── Speed chips ────────────────────────────────────────────────
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_speeds.length, (i) {
-                final sel = i == _selectedSpeed;
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedSpeed = i),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: sel
-                          ? AppColors.accentDim
-                          : AppColors.navyMid(context),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: sel
-                            ? AppColors.accentBorder
-                            : AppColors.navyLight(context),
-                        width: 1.5,
+            // Speed Selector
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_speeds.length, (i) {
+                  final isSelected = i == _selectedSpeed;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedSpeed = i),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.accentDim
+                            : AppColors.navyMid(context),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.accent
+                              : AppColors.navyLight(context),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Text(
+                        _speeds[i],
+                        style: text14(
+                          fontWeight: FontWeight.w700,
+                          color: isSelected
+                              ? AppColors.accent
+                              : AppColors.textMuted(context),
+                          context: context,
+                        ),
                       ),
                     ),
-                    child: Text(
-                      _speeds[i],
-                      style: TextStyle(
-                        fontFamily: 'DMSans',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: sel
-                            ? AppColors.accent
-                            : AppColors.textMuted(context),
-                      ),
-                    ),
-                  ),
-                );
-              }),
+                  );
+                }),
+              ),
             ),
 
             const Spacer(),
@@ -295,13 +361,14 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   Widget _ctrlBtn(BuildContext context, IconData icon) {
     return Container(
-      width: 46, height: 46,
+      width: 52,
+      height: 52,
       decoration: BoxDecoration(
         color: AppColors.navyMid(context),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.navyLight(context), width: 1),
       ),
-      child: Icon(icon, color: AppColors.textSecondary, size: 22),
+      child: Icon(icon, color: AppColors.textMuted(context), size: 24),
     );
   }
 }

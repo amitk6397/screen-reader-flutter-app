@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../res/app_colors.dart';
 import '../../routes/app_routes.dart';
-import '../../utils/text_style.dart';
+import 'package:screen_reader/utils/textstyle.dart'; // As per your file path
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -22,21 +22,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       iconColor: AppColors.coverGreen,
       title: 'Listen to anything\non your screen',
       subtitle:
-      'Audiara reads books, articles, messages and web pages aloud — naturally, beautifully, hands-free.',
+          'Audiara reads books, articles, messages and web pages aloud — naturally, beautifully, hands-free.',
     ),
     _OnboardData(
       icon: Icons.nightlight_round,
       iconColor: AppColors.coverPurple,
       title: 'Night reading\nwithout eye strain',
       subtitle:
-      'Perfect for bedtime. Let Audiara read while you relax in the dark — no bright screens, zero strain.',
+          'Perfect for bedtime. Let Audiara read while you relax in the dark — no bright screens, zero strain.',
     ),
     _OnboardData(
       icon: Icons.accessibility_new_rounded,
       iconColor: AppColors.coverBlue,
       title: 'Built for everyone,\nalways accessible',
       subtitle:
-      'Designed for visually impaired users and anyone who prefers audio. Customise voice, speed and tone.',
+          'Designed for visually impaired users and anyone who prefers audio. Customise voice, speed and tone.',
     ),
   ];
 
@@ -64,21 +64,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Page view (art area) ────────────────────────────────────────
+            // ── Page View (Illustration Area) ─────────────────────────────────
             Expanded(
               flex: 5,
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (i) => setState(() => _currentPage = i),
                 itemCount: _pages.length,
-                itemBuilder: (_, i) => _OnboardPage(
-                  data: _pages[i],
-                  navyMid: AppColors.navyMid(context),
-                ),
+                itemBuilder: (_, i) => _OnboardPage(data: _pages[i]),
               ),
             ),
 
-            // ── Bottom content ──────────────────────────────────────────────
+            // ── Bottom Content ───────────────────────────────────────────────
             Expanded(
               flex: 5,
               child: Padding(
@@ -86,17 +83,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 32),
 
-                    // Dots
+                    // Progress Dots
                     Row(
                       children: List.generate(
                         _pages.length,
-                            (i) => AnimatedContainer(
+                        (i) => AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.only(right: 6),
+                          margin: const EdgeInsets.only(right: 7),
                           height: 4,
-                          width: i == _currentPage ? 20 : 8,
+                          width: i == _currentPage ? 22 : 8,
                           decoration: BoxDecoration(
                             color: i == _currentPage
                                 ? AppColors.accent
@@ -107,46 +104,67 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 32),
 
+                    // Title
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 350),
                       child: Text(
                         _pages[_currentPage].title,
                         key: ValueKey(_currentPage),
-                        style: AppTextStyles.displayMedium.copyWith(
-                            color: AppColors.textPrimary(context)),
+                        style: text26(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context,
+                        ),
                       ),
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
 
+                    // Subtitle
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 350),
                       child: Text(
                         _pages[_currentPage].subtitle,
                         key: ValueKey('sub$_currentPage'),
-                        style: AppTextStyles.bodyLarge.copyWith(
-                            color: AppColors.textMuted(context)),
+                        style: text16(
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.textMuted(context),
+                          context: context,
+                        ),
                       ),
                     ),
 
                     const Spacer(),
 
+                    // Continue Button
                     SizedBox(
                       width: double.infinity,
-                      height: 52,
+                      height: 56,
                       child: ElevatedButton(
                         onPressed: _next,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.accent,
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 0,
+                        ),
                         child: Text(
                           _currentPage == _pages.length - 1
                               ? 'Get Started'
                               : 'Continue',
+                          style: text16(
+                            fontWeight: FontWeight.w600,
+                            context: context,
+                          ),
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
                   ],
                 ),
               ),
@@ -158,42 +176,52 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// ── Onboard page art ──────────────────────────────────────────────────────────
-
+// ─────────────────────────────────────────────
+// Onboard Illustration Page
+// ─────────────────────────────────────────────
 class _OnboardPage extends StatelessWidget {
   final _OnboardData data;
-  final Color navyMid;
-  const _OnboardPage({required this.data, required this.navyMid});
+
+  const _OnboardPage({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: navyMid,
+      color: AppColors.navyMid(context),
       child: Stack(
         alignment: Alignment.center,
         children: [
+          // Rotating outer ring
           TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0, end: 1),
-            duration: const Duration(seconds: 10),
-            builder: (_, v, child) =>
-                Transform.rotate(angle: v * 6.28, child: child),
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(seconds: 12),
+            builder: (_, value, child) =>
+                Transform.rotate(angle: value * 6.28, child: child),
             child: Container(
-              width: 160, height: 160,
+              width: 172,
+              height: 172,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                    color: data.iconColor.withOpacity(0.25), width: 1.5),
+                  color: data.iconColor.withOpacity(0.22),
+                  width: 1.8,
+                ),
               ),
             ),
           ),
+
+          // Inner glow circle
           Container(
-            width: 120, height: 120,
+            width: 128,
+            height: 128,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: data.iconColor.withOpacity(0.12),
+              color: data.iconColor.withOpacity(0.13),
             ),
           ),
-          Icon(data.icon, size: 52, color: data.iconColor),
+
+          // Main Icon
+          Icon(data.icon, size: 58, color: data.iconColor),
         ],
       ),
     );
@@ -205,6 +233,7 @@ class _OnboardData {
   final Color iconColor;
   final String title;
   final String subtitle;
+
   const _OnboardData({
     required this.icon,
     required this.iconColor,

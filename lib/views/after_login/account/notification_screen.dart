@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -24,9 +24,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       initialTime: _reminderTime,
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.dark(
+          colorScheme: ColorScheme.dark(
             primary: AppColors.accent,
-            surface: AppColors.navyMid,
+            surface: AppColors.navyMid(context),
           ),
         ),
         child: child!,
@@ -38,7 +38,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -52,16 +52,20 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.textMuted(context), size: 16),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Notifications', style: AppTextStyles.displaySmall),
+                  Text('Notifications',
+                      style: text24(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context)),
                 ],
               ),
             ),
@@ -80,12 +84,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       decoration: BoxDecoration(
                         color: _pushEnabled
                             ? AppColors.warning.withOpacity(0.08)
-                            : AppColors.navyMid,
+                            : AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(
                           color: _pushEnabled
                               ? AppColors.warning.withOpacity(0.4)
-                              : AppColors.navyLight,
+                              : AppColors.navyLight(context),
                           width: _pushEnabled ? 1.5 : 1,
                         ),
                       ),
@@ -105,20 +109,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text('Push Notifications',
-                                    style: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 15,
+                                    style: text15(
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
+                                      color: AppColors.textPrimary(context),
+                                      context: context,
                                     )),
-                                SizedBox(height: 2),
+                                const SizedBox(height: 2),
                                 Text('Enable all notifications',
-                                    style: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 12,
-                                      color: AppColors.textMuted,
+                                    style: text12(
+                                      color: AppColors.textMuted(context),
+                                      context: context,
                                     )),
                               ],
                             ),
@@ -128,8 +130,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             onChanged: (v) => setState(() => _pushEnabled = v),
                             activeColor: AppColors.warning,
                             activeTrackColor: AppColors.warning.withOpacity(0.3),
-                            inactiveTrackColor: AppColors.navyLight,
-                            inactiveThumbColor: AppColors.textMuted,
+                            inactiveTrackColor: AppColors.navyLight(context),
+                            inactiveThumbColor: AppColors.textMuted(context),
                           ),
                         ],
                       ),
@@ -137,7 +139,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
                     const SizedBox(height: 20),
 
-                    _sectionLabel('Activity'),
+                    _sectionLabel(context, 'Activity'),
                     const SizedBox(height: 8),
 
                     _notifTile(
@@ -178,7 +180,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
                     const SizedBox(height: 20),
 
-                    _sectionLabel('Reading Reminder'),
+                    _sectionLabel(context, 'Reading Reminder'),
                     const SizedBox(height: 8),
 
                     _notifTile(
@@ -198,21 +200,20 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 14, vertical: 14),
                           decoration: BoxDecoration(
-                            color: AppColors.navyMid,
+                            color: AppColors.navyMid(context),
                             borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppColors.navyLight),
+                            border: Border.all(color: AppColors.navyLight(context)),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.access_time_rounded,
-                                  color: AppColors.textMuted, size: 18),
+                              Icon(Icons.access_time_rounded,
+                                  color: AppColors.textMuted(context), size: 18),
                               const SizedBox(width: 12),
-                              const Text('Reminder Time',
-                                  style: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 14,
+                              Text('Reminder Time',
+                                  style: text14(
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.textPrimary,
+                                    color: AppColors.textPrimary(context),
+                                    context: context,
                                   )),
                               const Spacer(),
                               Text(
@@ -225,8 +226,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              const Icon(Icons.chevron_right_rounded,
-                                  color: AppColors.textMuted, size: 18),
+                              Icon(Icons.chevron_right_rounded,
+                                  color: AppColors.textMuted(context), size: 18),
                             ],
                           ),
                         ),
@@ -244,9 +245,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  Widget _sectionLabel(String text) => Padding(
+  Widget _sectionLabel(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(left: 2, bottom: 2),
-    child: Text(text.toUpperCase(), style: AppTextStyles.labelMedium),
+    child: Text(text.toUpperCase(),
+        style: text12(
+            fontWeight: FontWeight.w700,
+            color: AppColors.textMuted(context),
+            context: context)),
   );
 
   Widget _notifTile(String title, String subtitle, IconData icon, Color color,
@@ -254,9 +259,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight),
+        border: Border.all(color: AppColors.navyLight(context)),
       ),
       child: Row(
         children: [
@@ -275,17 +280,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 14,
+                    style: text14(
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: AppColors.textPrimary(context),
+                      context: context,
                     )),
                 Text(subtitle,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 11,
-                      color: AppColors.textMuted,
+                    style: text11(
+                      color: AppColors.textMuted(context),
+                      context: context,
                     )),
               ],
             ),
@@ -295,8 +298,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             onChanged: _pushEnabled ? onChanged : null,
             activeColor: color,
             activeTrackColor: color.withOpacity(0.3),
-            inactiveTrackColor: AppColors.navyLight,
-            inactiveThumbColor: AppColors.textMuted,
+            inactiveTrackColor: AppColors.navyLight(context),
+            inactiveThumbColor: AppColors.textMuted(context),
           ),
         ],
       ),

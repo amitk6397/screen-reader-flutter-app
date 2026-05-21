@@ -1,15 +1,15 @@
 // lib/views/after_login/account/profile_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:screen_reader/providers/theme_provider.dart';
+import 'package:get/get.dart';
 import 'package:screen_reader/views/after_login/account/privacy_policy_screen.dart';
 import 'package:screen_reader/views/after_login/account/profile_edit.dart';
 import 'package:screen_reader/views/after_login/account/sleep_time_screen.dart';
 import 'package:screen_reader/views/after_login/account/voice_setting_scrren.dart';
+import 'package:screen_reader/view_model/global_controller/theme_controller.dart';
 
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 import 'notification_screen.dart';
 import 'playback_speed_screen.dart';
 import 'screen_reader_screen.dart';
@@ -20,8 +20,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-    final isDark = themeProvider.isDark;
+    final themeProvider = Get.find<ThemeProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: AppColors.navy(context),
@@ -35,8 +35,10 @@ class ProfileScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Text('Profile',
-                        style: AppTextStyles.displaySmall
-                            .copyWith(color: AppColors.textPrimary(context))),
+                        style: text24(
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary(context),
+                            context: context)),
                     const Spacer(),
 
                     // Theme toggle button
@@ -115,12 +117,15 @@ class ProfileScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Rohan Sharma',
-                                style: AppTextStyles.headingLarge
-                                    .copyWith(color: AppColors.textPrimary(context))),
+                                style: text20(
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textPrimary(context),
+                                    context: context)),
                             const SizedBox(height: 2),
                             Text('rohan@example.com',
-                                style: AppTextStyles.bodySmall
-                                    .copyWith(color: AppColors.textMuted(context))),
+                                style: text12(
+                                    color: AppColors.textMuted(context),
+                                    context: context)),
                             const SizedBox(height: 6),
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -174,7 +179,7 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   children: [
-                    _menuSection(context, 'Preferences', [
+                    _menuSection(context, isDark, 'Preferences', [
                       _MenuItem(Icons.mic_none_rounded, 'Voice Settings', AppColors.coverGreen,
                           route: const VoiceSettingsScreen()),
                       _MenuItem(Icons.speed_rounded, 'Playback Speed', AppColors.coverBlue,
@@ -183,14 +188,14 @@ class ProfileScreen extends StatelessWidget {
                           route: const SleepTimerScreen()),
                     ]),
                     const SizedBox(height: 12),
-                    _menuSection(context, 'Accessibility', [
+                    _menuSection(context, isDark, 'Accessibility', [
                       _MenuItem(Icons.accessibility_new_rounded, 'Screen Reader', AppColors.info,
                           route: const ScreenReaderScreen()),
                       _MenuItem(Icons.text_fields_rounded, 'Font Size', AppColors.coverTeal,
                           route: const FontSizeScreen()),
                     ]),
                     const SizedBox(height: 12),
-                    _menuSection(context, 'Account', [
+                    _menuSection(context, isDark, 'Account', [
                       _MenuItem(Icons.brightness_6_rounded, 'Appearance', AppColors.coverPurple,
                           isThemeToggle: true),
                       _MenuItem(Icons.notifications_outlined, 'Notifications', AppColors.warning,
@@ -244,15 +249,18 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _menuSection(BuildContext context, String title, List<_MenuItem> items) {
+  Widget _menuSection(
+      BuildContext context, bool isDark, String title, List<_MenuItem> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8, left: 2),
           child: Text(title.toUpperCase(),
-              style: AppTextStyles.labelMedium
-                  .copyWith(color: AppColors.textMuted(context))),
+              style: text12(
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMuted(context),
+                  context: context)),
         ),
         Container(
           decoration: BoxDecoration(
@@ -269,7 +277,7 @@ class ProfileScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       if (item.isThemeToggle) {
-                        context.read<ThemeProvider>().toggle();
+                        Get.find<ThemeProvider>().toggle();
                       } else if (item.danger) {
                         showLogoutDialog(context, onConfirm: () {});
                       } else if (item.route != null) {
@@ -305,9 +313,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           // Inline toggle for theme row
                           if (item.isThemeToggle)
-                            Consumer<ThemeProvider>(
-                              builder: (_, tp, __) => _ThemeSwitch(isDark: tp.isDark),
-                            )
+                            _ThemeSwitch(isDark: isDark)
                           else
                             Icon(Icons.chevron_right_rounded,
                                 color: AppColors.textMuted(context), size: 18),

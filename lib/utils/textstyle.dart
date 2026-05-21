@@ -1,190 +1,181 @@
 import 'package:flutter/material.dart';
-
-import '../res/app_colors.dart';
+import 'package:screen_reader/res/app_colors.dart';
 
 const String fontFamily = "Poppins";
 
-TextStyle text8({
+/// Base text style generator
+TextStyle _baseTextStyle({
+  required double fontSize,
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
+  Color? color,
+  BuildContext? context, // Pass context only when using theme-aware colors
 }) {
+  final defaultColor = context != null
+      ? AppColors.textPrimary(context)
+      : AppColors.textPrimary(
+          context!,
+        ); // fallback (you'll usually pass context)
+
   return TextStyle(
     fontFamily: fontFamily,
-    fontSize: 8,
+    fontSize: fontSize,
     fontWeight: fontWeight,
-    color: color,
+    color: color ?? defaultColor,
   );
 }
 
-TextStyle text11({
+// ── Regular Sizes ──────────────────────
+TextStyle text8({
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 11,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 8,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text10({
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 10,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 10,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
+
+TextStyle text11({
+  FontWeight fontWeight = FontWeight.normal,
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 11,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text12({
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 12,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 12,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text13({
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 13,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 13,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text14({
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 14,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 14,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text15({
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 15,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 15,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text16({
   FontWeight fontWeight = FontWeight.normal,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 16,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 16,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
+// ── Larger / Heading Sizes ──────────────────────
 TextStyle text18({
-  FontWeight fontWeight = FontWeight.bold,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 18,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  FontWeight fontWeight = FontWeight.w600,
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 18,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text20({
-  FontWeight fontWeight = FontWeight.bold,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  FontWeight fontWeight = FontWeight.w600,
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 20,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text24({
-  FontWeight fontWeight = FontWeight.bold,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 24,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  FontWeight fontWeight = FontWeight.w700,
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 24,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text26({
-  FontWeight fontWeight = FontWeight.bold,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 26,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  FontWeight fontWeight = FontWeight.w700,
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 26,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text30({
-  FontWeight fontWeight = FontWeight.bold,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 30,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
+  FontWeight fontWeight = FontWeight.w700,
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 30,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);
 
 TextStyle text40({
-  FontWeight fontWeight = FontWeight.bold,
-  Color color = AppColors.textPrimary,
-}) {
-  return TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 40,
-    fontWeight: fontWeight,
-    color: color,
-  );
-}
-
-// Extra styles
-TextStyle heading({Color color = AppColors.textPrimary}) {
-  return const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
-  );
-}
-
-TextStyle subtitle({Color color = AppColors.textSecondary}) {
-  return const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-  );
-}
+  FontWeight fontWeight = FontWeight.w700,
+  Color? color,
+  BuildContext? context,
+}) => _baseTextStyle(
+  fontSize: 40,
+  fontWeight: fontWeight,
+  color: color,
+  context: context,
+);

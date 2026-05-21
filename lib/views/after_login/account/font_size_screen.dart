@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 
 class FontSizeScreen extends StatefulWidget {
   const FontSizeScreen({super.key});
@@ -50,7 +50,11 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Font Size', style: AppTextStyles.displaySmallOf(context)),
+                  Text('Font Size',
+                      style: text24(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context)),
                 ],
               ),
             ),
@@ -77,7 +81,11 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('PREVIEW', style: AppTextStyles.labelMediumOf(context)),
+                          Text('PREVIEW',
+                              style: text12(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textMuted(context),
+                                  context: context)),
                           const SizedBox(height: 12),
                           Text(
                             'The quick brown fox jumps over the lazy dog.',
@@ -264,7 +272,11 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
 
   Widget _sectionLabel(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(left: 2, bottom: 2),
-    child: Text(text.toUpperCase(), style: AppTextStyles.labelMediumOf(context)),
+    child: Text(text.toUpperCase(),
+        style: text12(
+            fontWeight: FontWeight.w700,
+            color: AppColors.textMuted(context),
+            context: context)),
   );
 
   Widget _sliderCard(

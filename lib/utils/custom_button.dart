@@ -29,26 +29,30 @@ class AppButton extends StatelessWidget {
       onTap: isLoading ? null : onTap,
       child: Container(
         height: height,
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: color ?? AppColors.button,
+          color: color ?? AppColors.accent,
           borderRadius: BorderRadius.circular(radius),
         ),
         child: isLoading
             ? SizedBox(
                 width: 22,
                 height: 22,
-                child: const CircularProgressIndicator(
+                child: CircularProgressIndicator(
                   strokeWidth: 1,
-                  color: AppColors.white,
+                  color: AppColors.navy(context),
                 ),
               )
             : Text(
                 title,
                 style:
                     textStyle ??
-                    text15(color: AppColors.white, fontWeight: FontWeight.w600),
+                    text15(
+                      color: AppColors.navy(context),
+                      fontWeight: FontWeight.w600,
+                      context: context,
+                    ),
               ),
       ),
     );
@@ -81,7 +85,7 @@ class AppOutlineButton extends StatelessWidget {
         height: height,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          border: Border.all(color: color ?? AppColors.button),
+          border: Border.all(color: color ?? AppColors.accent),
           borderRadius: BorderRadius.circular(radius),
         ),
         child: Text(
@@ -89,8 +93,9 @@ class AppOutlineButton extends StatelessWidget {
           style:
               textStyle ??
               text14(
-                color: color ?? AppColors.button,
+                color: color ?? AppColors.accent,
                 fontWeight: FontWeight.w600,
+                context: context,
               ),
         ),
       ),
@@ -186,27 +191,31 @@ class CustomElevatedButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onTap,
         style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          backgroundColor: color ?? AppColors.button,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          backgroundColor: color ?? AppColors.accent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
           ),
           elevation: 2,
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 22,
                 width: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color: AppColors.navy(context),
                 ),
               )
             : Text(
                 title,
                 style:
                     textStyle ??
-                    text15(color: Colors.white, fontWeight: FontWeight.w600),
+                    text15(
+                      color: AppColors.navy(context),
+                      fontWeight: FontWeight.w600,
+                      context: context,
+                    ),
               ),
       ),
     );
@@ -245,15 +254,19 @@ class CustomElevatedIconButton extends StatelessWidget {
       height: height,
       child: ElevatedButton.icon(
         onPressed: onPressed,
-        icon: Icon(icon, size: iconSize, color: textColor ?? AppColors.white),
+        icon: Icon(icon, size: iconSize, color: textColor ?? AppColors.navy(context)),
         label: Text(
           text,
           style:
               textStyle ??
-              text15(color: AppColors.white, fontWeight: FontWeight.w600),
+              text15(
+                color: textColor ?? AppColors.navy(context),
+                fontWeight: FontWeight.w600,
+                context: context,
+              ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? AppColors.button,
+          backgroundColor: backgroundColor ?? AppColors.accent,
           padding: padding,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
@@ -296,7 +309,11 @@ class CustomTextButton extends StatelessWidget {
           title,
           style:
               textStyle ??
-              text14(color: AppColors.button, fontWeight: FontWeight.w600),
+              text14(
+                color: AppColors.accent,
+                fontWeight: FontWeight.w600,
+                context: context,
+              ),
         ),
       ),
     );

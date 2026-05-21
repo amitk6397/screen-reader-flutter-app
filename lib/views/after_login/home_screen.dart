@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../model/book_model.dart';
 import '../../res/app_colors.dart';
-import '../../utils/text_style.dart';
 import '../custom_widgts/book_cover_widget.dart';
+import 'package:screen_reader/utils/textstyle.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +16,12 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedCategory = 0;
 
   final List<String> _categories = [
-    'All', 'Non-Fiction', 'Fiction', 'Productivity', 'Philosophy', 'Science',
+    'All',
+    'Non-Fiction',
+    'Fiction',
+    'Productivity',
+    'Philosophy',
+    'Science',
   ];
 
   @override
@@ -24,11 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.navy(context),
       body: CustomScrollView(
         slivers: [
-          // ── App bar ────────────────────────────────────────────────────────
+          // App Bar / Header
           SliverToBoxAdapter(
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                 child: Column(
                   children: [
                     Row(
@@ -36,41 +42,57 @@ class _HomeScreenState extends State<HomeScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Good evening 👋',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                    color: AppColors.textMuted(context))),
-                            const SizedBox(height: 2),
-                            Text('Rohan',
-                                style: AppTextStyles.displaySmall.copyWith(
-                                    color: AppColors.textPrimary(context))),
+                            Text(
+                              'Good evening 👋',
+                              style: text14(
+                                color: AppColors.textMuted(context),
+                                context: context,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Rohan',
+                              style: text26(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary(context),
+                                context: context,
+                              ),
+                            ),
                           ],
                         ),
                         const Spacer(),
                         Stack(
                           children: [
                             Container(
-                              width: 42, height: 42,
+                              width: 44,
+                              height: 44,
                               decoration: BoxDecoration(
                                 color: AppColors.navyMid(context),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                    color: AppColors.navyLight(context),
-                                    width: 1),
+                                  color: AppColors.navyLight(context),
+                                  width: 1,
+                                ),
                               ),
-                              child: Icon(Icons.notifications_outlined,
-                                  color: AppColors.textPrimary(context),
-                                  size: 20),
+                              child: Icon(
+                                Icons.notifications_outlined,
+                                color: AppColors.textPrimary(context),
+                                size: 22,
+                              ),
                             ),
                             Positioned(
-                              right: 8, top: 8,
+                              right: 8,
+                              top: 8,
                               child: Container(
-                                width: 8, height: 8,
+                                width: 9,
+                                height: 9,
                                 decoration: BoxDecoration(
-                                  color: AppColors.accent2,
+                                  color: AppColors.accent,
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: AppColors.navy(context),
-                                      width: 1.5),
+                                    color: AppColors.navy(context),
+                                    width: 1.5,
+                                  ),
                                 ),
                               ),
                             ),
@@ -79,36 +101,50 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
 
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
 
-                    // Search bar
+                    // Search Bar
                     Container(
-                      height: 46,
+                      height: 50,
                       decoration: BoxDecoration(
                         color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                            color: AppColors.navyLight(context), width: 1.5),
+                          color: AppColors.navyLight(context),
+                          width: 1.5,
+                        ),
                       ),
                       child: Row(
                         children: [
-                          const SizedBox(width: 14),
-                          Icon(Icons.search_rounded,
-                              color: AppColors.textMuted(context), size: 20),
-                          const SizedBox(width: 10),
-                          Text('Search books, articles…',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                  color: AppColors.textMuted(context))),
-                          const Spacer(),
+                          const SizedBox(width: 16),
+                          Icon(
+                            Icons.search_rounded,
+                            color: AppColors.textMuted(context),
+                            size: 22,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Search books, articles…',
+                              style: text15(
+                                color: AppColors.textMuted(context),
+                                context: context,
+                              ),
+                            ),
+                          ),
                           Container(
                             margin: const EdgeInsets.all(6),
-                            width: 34, height: 34,
+                            width: 36,
+                            height: 36,
                             decoration: BoxDecoration(
                               color: AppColors.accentDim,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Icon(Icons.tune_rounded,
-                                color: AppColors.accent, size: 16),
+                            child: const Icon(
+                              Icons.tune_rounded,
+                              color: AppColors.accent,
+                              size: 18,
+                            ),
                           ),
                         ],
                       ),
@@ -119,132 +155,161 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // ── Daily streak banner ────────────────────────────────────────────
+          // Daily Streak Banner
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 18, 12, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 12),
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 decoration: BoxDecoration(
-                  color: AppColors.accent2Dim,
-                  borderRadius: BorderRadius.circular(14),
+                  color: AppColors.accent,
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: AppColors.accent2.withOpacity(0.3), width: 1),
+                    color: AppColors.accent.withOpacity(0.3),
+                    width: 1,
+                  ),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      width: 40, height: 40,
+                      width: 42,
+                      height: 42,
                       decoration: BoxDecoration(
-                        color: AppColors.accent2.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.accent.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.local_fire_department_rounded,
-                          color: AppColors.accent2, size: 22),
+                      child: const Icon(
+                        Icons.local_fire_department_rounded,
+                        color: AppColors.accent,
+                        size: 24,
+                      ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('12-day streak! Keep it up 🔥',
-                              style: AppTextStyles.headingSmall.copyWith(
-                                  color: AppColors.accent2)),
-                          const SizedBox(height: 2),
+                          Text(
+                            '12-day streak! Keep it up 🔥',
+                            style: text16(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.accent,
+                              context: context,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
                           Text(
                             'Listen for 20 more min to keep your streak',
-                            style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textMuted(context)),
+                            style: text13(
+                              color: AppColors.textMuted(context),
+                              context: context,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right_rounded,
-                        color: AppColors.accent2, size: 20),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      color: AppColors.accent,
+                      size: 22,
+                    ),
                   ],
                 ),
               ),
             ),
           ),
 
-          // ── Continue listening ─────────────────────────────────────────────
+          // Continue Listening
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 22, 12, 0),
-              child: SectionHeaderWidget(title: 'Continue Listening',
-                  onSeeAll: () {}),
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+              child: SectionHeaderWidget(
+                title: 'Continue Listening',
+                onSeeAll: () {},
+              ),
             ),
           ),
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
               child: FeaturedCardWidget(book: sampleBooks[0]),
             ),
           ),
 
-          // ── Quick actions ──────────────────────────────────────────────────
+          // Quick Actions
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 22, 12, 0),
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
               child: Row(
                 children: [
-                  _quickAction(context,
-                      icon: Icons.nightlight_round,
-                      label: 'Sleep\nTimer',
-                      color: AppColors.coverPurple),
+                  _quickAction(
+                    context,
+                    icon: Icons.nightlight_round,
+                    label: 'Sleep\nTimer',
+                    color: AppColors.coverPurple,
+                  ),
                   const SizedBox(width: 10),
-                  _quickAction(context,
-                      icon: Icons.speed_rounded,
-                      label: 'Speed\nControl',
-                      color: AppColors.coverBlue),
+                  _quickAction(
+                    context,
+                    icon: Icons.speed_rounded,
+                    label: 'Speed\nControl',
+                    color: AppColors.coverBlue,
+                  ),
                   const SizedBox(width: 10),
-                  _quickAction(context,
-                      icon: Icons.bookmark_rounded,
-                      label: 'Book\nmarks',
-                      color: AppColors.coverGreen),
+                  _quickAction(
+                    context,
+                    icon: Icons.bookmark_rounded,
+                    label: 'Book\nmarks',
+                    color: AppColors.coverGreen,
+                  ),
                   const SizedBox(width: 10),
-                  _quickAction(context,
-                      icon: Icons.equalizer_rounded,
-                      label: 'Voice\nSettings',
-                      color: AppColors.coverOrange),
+                  _quickAction(
+                    context,
+                    icon: Icons.equalizer_rounded,
+                    label: 'Voice\nSettings',
+                    color: AppColors.coverOrange,
+                  ),
                 ],
               ),
             ),
           ),
 
-          // ── Categories ────────────────────────────────────────────────────
+          // Categories
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 22, 12, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
                   child: SectionHeaderWidget(title: 'Explore', onSeeAll: () {}),
                 ),
                 const SizedBox(height: 12),
                 SizedBox(
-                  height: 36,
+                  height: 40,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: _categories.length,
                     itemBuilder: (_, i) {
                       final selected = i == _selectedCategory;
                       return GestureDetector(
-                        onTap: () =>
-                            setState(() => _selectedCategory = i),
+                        onTap: () => setState(() => _selectedCategory = i),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 250),
-                          margin: const EdgeInsets.only(right: 8),
+                          margin: const EdgeInsets.only(right: 10),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
+                            horizontal: 18,
+                            vertical: 9,
+                          ),
                           decoration: BoxDecoration(
                             color: selected
                                 ? AppColors.accent
                                 : AppColors.navyMid(context),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(30),
                             border: Border.all(
                               color: selected
                                   ? AppColors.accent
@@ -254,13 +319,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Text(
                             _categories[i],
-                            style: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 12,
+                            style: text14(
                               fontWeight: FontWeight.w600,
                               color: selected
                                   ? AppColors.navy(context)
                                   : AppColors.textMuted(context),
+                              context: context,
                             ),
                           ),
                         ),
@@ -272,55 +336,56 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // ── Book grid ─────────────────────────────────────────────────────
+          // Book Grid
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
             sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
                 childAspectRatio: 0.72,
               ),
               delegate: SliverChildBuilderDelegate(
-                    (_, i) => BookCoverWidget(
-                    book: sampleBooks[i % sampleBooks.length]),
+                (_, i) =>
+                    BookCoverWidget(book: sampleBooks[i % sampleBooks.length]),
                 childCount: 4,
               ),
             ),
           ),
 
-          // ── Trending ──────────────────────────────────────────────────────
+          // Trending This Week
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 24, 12, 0),
+              padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
               child: SectionHeaderWidget(
-                  title: 'Trending This Week', onSeeAll: () {}),
-            ),
-          ),
-
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
-            sliver: SliverToBoxAdapter(
-              child: SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: sampleBooks.length,
-                  itemBuilder: (_, i) =>
-                      _trendingCard(context, sampleBooks[i]),
-                ),
+                title: 'Trending This Week',
+                onSeeAll: () {},
               ),
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 30),
+            sliver: SliverToBoxAdapter(
+              child: SizedBox(
+                height: 205,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: sampleBooks.length,
+                  itemBuilder: (_, i) => _trendingCard(context, sampleBooks[i]),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _quickAction(BuildContext context, {
+  // Quick Action Widget
+  Widget _quickAction(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required Color color,
@@ -330,29 +395,28 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.navyMid(context),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.navyLight(context), width: 1),
         ),
         child: Column(
           children: [
             Container(
-              width: 38, height: 38,
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
                 color: color.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 20),
+              child: Icon(icon, color: color, size: 22),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               label,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'DMSans',
-                fontSize: 10,
+              style: text12(
                 fontWeight: FontWeight.w600,
                 color: AppColors.textMuted(context),
-                height: 1.4,
+                context: context,
               ),
             ),
           ],
@@ -361,45 +425,57 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Trending Card
   Widget _trendingCard(BuildContext context, BookModel book) {
     return Container(
-      width: 140,
-      margin: const EdgeInsets.only(right: 12),
+      width: 145,
+      margin: const EdgeInsets.only(right: 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 140,
+            height: 145,
             decoration: BoxDecoration(
               color: book.coverColor,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Stack(
               children: [
-                Center(
-                  child: Icon(Icons.menu_book_rounded,
-                      color: Colors.white.withOpacity(0.3), size: 50),
+                const Center(
+                  child: Icon(
+                    Icons.menu_book_rounded,
+                    color: Colors.white30,
+                    size: 52,
+                  ),
                 ),
                 Positioned(
-                  top: 8, right: 8,
+                  top: 10,
+                  right: 10,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 6, vertical: 3),
+                      horizontal: 7,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.35),
+                      color: Colors.black.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Row(
-                      children: const [
-                        Icon(Icons.star_rounded,
-                            color: AppColors.accent2, size: 11),
-                        SizedBox(width: 2),
-                        Text('4.8',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontFamily: 'DMSans',
-                                fontWeight: FontWeight.w600)),
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          color: AppColors.accent,
+                          size: 12,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          '4.8',
+                          style: text12(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            context: context,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -407,16 +483,25 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(book.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.headingSmall.copyWith(
-                  color: AppColors.textPrimary(context))),
-          const SizedBox(height: 2),
-          Text(book.author,
-              style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textMuted(context))),
+          const SizedBox(height: 10),
+          Text(
+            book.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: text16(
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary(context),
+              context: context,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            book.author,
+            style: text13(
+              color: AppColors.textMuted(context),
+              context: context,
+            ),
+          ),
         ],
       ),
     );

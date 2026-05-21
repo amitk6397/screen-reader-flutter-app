@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../res/app_colors.dart';
 import '../../routes/app_routes.dart';
-import '../../utils/text_style.dart';
+import 'package:screen_reader/utils/textstyle.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,38 +22,53 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
 
-              // ── Back ──────────────────────────────────────────────────────
+              // Back Button
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Container(
-                  width: 36, height: 36,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
                     color: AppColors.navyLight(context),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.arrow_back_ios_new_rounded,
-                      size: 16, color: AppColors.textPrimary(context)),
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 18,
+                    color: AppColors.textPrimary(context),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 24),
-
-              Text('WELCOME BACK',
-                  style: AppTextStyles.labelLarge.copyWith(
-                      color: AppColors.textMuted(context))),
-              const SizedBox(height: 6),
-              Text('Login to Audiara',
-                  style: AppTextStyles.displayMedium.copyWith(
-                      color: AppColors.textPrimary(context))),
-
               const SizedBox(height: 32),
 
+              Text(
+                'WELCOME BACK',
+                style: text20(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textMuted(context),
+                  context: context,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Login to Audiara',
+                style: text26(
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary(context),
+                  context: context,
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Email Field
               _buildLabel(context, 'EMAIL'),
               const SizedBox(height: 8),
               _buildField(
@@ -63,8 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
               ),
 
-              const SizedBox(height: 18),
+              const SizedBox(height: 20),
 
+              // Password Field
               _buildLabel(context, 'PASSWORD'),
               const SizedBox(height: 8),
               _buildField(
@@ -79,77 +95,110 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? Icons.visibility_outlined
                         : Icons.visibility_off_outlined,
                     color: AppColors.accent,
-                    size: 20,
+                    size: 22,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
 
+              // Forgot Password
               Align(
                 alignment: Alignment.centerRight,
-                child: Text(
-                  'Forgot password?',
-                  style: const TextStyle(
-                    color: AppColors.accent,
-                    fontFamily: 'DMSans',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO: Add forgot password navigation
+                  },
+                  child: Text(
+                    'Forgot password?',
+                    style: text14(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.w600,
+                      context: context,
+                    ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 32),
 
+              // Sign In Button
               SizedBox(
                 width: double.infinity,
-                height: 52,
+                height: 56,
                 child: ElevatedButton(
                   onPressed: () => Get.offNamed(AppRoutes.mySheel),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: Colors.black,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text('Sign In'),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_forward_rounded, size: 18),
+                    children: [
+                      Text(
+                        'Sign In',
+                        style: text16(
+                          fontWeight: FontWeight.w600,
+                          context: context,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward_rounded, size: 20),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
-
-              Row(
-                children: [
-                  Expanded(
-                      child: Divider(color: AppColors.navyLight(context))),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('or continue with',
-                        style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textMuted(context))),
-                  ),
-                  Expanded(
-                      child: Divider(color: AppColors.navyLight(context))),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              Row(
-                children: [
-                  Expanded(
-                      child: _socialBtn(context,
-                          icon: Icons.g_mobiledata_rounded, label: 'Google')),
-                  const SizedBox(width: 12),
-                  Expanded(
-                      child: _socialBtn(context,
-                          icon: Icons.apple_rounded, label: 'Apple')),
-                ],
-              ),
-
               const SizedBox(height: 24),
 
+              // Divider
+              Row(
+                children: [
+                  Expanded(child: Divider(color: AppColors.navyLight(context))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'or continue with',
+                      style: text14(
+                        color: AppColors.textMuted(context),
+                        context: context,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: AppColors.navyLight(context))),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              // Social Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: _socialBtn(
+                      context,
+                      icon: Icons.g_mobiledata_rounded,
+                      label: 'Google',
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _socialBtn(
+                      context,
+                      icon: Icons.apple_rounded,
+                      label: 'Apple',
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 32),
+
+              // Register Link
               Center(
                 child: GestureDetector(
                   onTap: () => Navigator.pushReplacement(
@@ -159,16 +208,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: RichText(
                     text: TextSpan(
                       text: 'New here? ',
-                      style: TextStyle(
-                          color: AppColors.textMuted(context),
-                          fontFamily: 'DMSans',
-                          fontSize: 13),
-                      children: const [
+                      style: text14(
+                        color: AppColors.textMuted(context),
+                        context: context,
+                      ),
+                      children: [
                         TextSpan(
                           text: 'Create Account',
-                          style: TextStyle(
-                              color: AppColors.accent,
-                              fontWeight: FontWeight.w600),
+                          style: text15(
+                            color: AppColors.accent,
+                            fontWeight: FontWeight.w600,
+                            context: context,
+                          ),
                         ),
                       ],
                     ),
@@ -176,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -184,78 +235,90 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLabel(BuildContext context, String text) => Text(
-    text,
-    style: AppTextStyles.labelMedium.copyWith(
-        color: AppColors.textMuted(context)),
-  );
+  // Label
+  Widget _buildLabel(BuildContext context, String text) {
+    return Text(
+      text,
+      style: text13(
+        fontWeight: FontWeight.w500,
+        color: AppColors.textMuted(context),
+        context: context,
+      ),
+    );
+  }
 
+  // Input Field
   Widget _buildField(
-      BuildContext context, {
-        required String hint,
-        required IconData icon,
-        bool obscure = false,
-        TextInputType keyboardType = TextInputType.text,
-        Widget? suffixIcon,
-      }) {
+    BuildContext context, {
+    required String hint,
+    required IconData icon,
+    bool obscure = false,
+    TextInputType keyboardType = TextInputType.text,
+    Widget? suffixIcon,
+  }) {
     return Container(
-      height: 52,
+      height: 56,
       decoration: BoxDecoration(
         color: AppColors.navyMid(context),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.navyLight(context), width: 1.5),
       ),
       child: Row(
         children: [
-          const SizedBox(width: 14),
-          Icon(icon, color: AppColors.textMuted(context), size: 20),
-          const SizedBox(width: 10),
+          const SizedBox(width: 16),
+          Icon(icon, color: AppColors.textMuted(context), size: 22),
+          const SizedBox(width: 12),
           Expanded(
             child: TextField(
               obscureText: obscure,
               keyboardType: keyboardType,
-              style: TextStyle(
-                  color: AppColors.textPrimary(context),
-                  fontFamily: 'DMSans',
-                  fontSize: 14),
+              style: text15(
+                color: AppColors.textPrimary(context),
+                context: context,
+              ),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textMuted(context)),
+                hintStyle: text15(
+                  color: AppColors.textMuted(context),
+                  context: context,
+                ),
                 border: InputBorder.none,
                 isDense: true,
               ),
             ),
           ),
-          if (suffixIcon != null) ...[
-            suffixIcon,
-            const SizedBox(width: 14),
-          ],
+          if (suffixIcon != null) ...[suffixIcon, const SizedBox(width: 16)],
         ],
       ),
     );
   }
 
-  Widget _socialBtn(BuildContext context,
-      {required IconData icon, required String label}) {
+  // Social Button
+  Widget _socialBtn(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+  }) {
     return Container(
-      height: 48,
+      height: 52,
       decoration: BoxDecoration(
         color: AppColors.navyMid(context),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.navyLight(context), width: 1.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: AppColors.textMuted(context), size: 22),
-          const SizedBox(width: 8),
-          Text(label,
-              style: TextStyle(
-                  color: AppColors.textMuted(context),
-                  fontFamily: 'DMSans',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500)),
+          Icon(icon, color: AppColors.textPrimary(context), size: 24),
+          const SizedBox(width: 10),
+          Text(
+            label,
+            style: text15(
+              fontWeight: FontWeight.w500,
+              color: AppColors.textPrimary(context),
+              context: context,
+            ),
+          ),
         ],
       ),
     );

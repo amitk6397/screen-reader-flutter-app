@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:screen_reader/utils/textstyle.dart';
 
 import '../res/app_colors.dart';
 
@@ -30,18 +31,16 @@ class AppSnackbar {
       titleText: title != null && title.isNotEmpty
           ? Text(
               title,
-              style: TextStyle(
+              style: text16(
                 color: txtColor,
-                fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             )
           : const SizedBox.shrink(),
       messageText: Text(
         message,
-        style: TextStyle(
+        style: text14(
           color: txtColor,
-          fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -80,9 +79,8 @@ class AppSnackbar {
           icon: Icons.warning_rounded,
         );
       case SnackBarType.info:
-      default:
         return _SnackBarConfig(
-          color: AppColors.button,
+          color: AppColors.info,
           icon: Icons.info_rounded,
         );
     }

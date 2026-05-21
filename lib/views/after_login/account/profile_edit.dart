@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -25,7 +25,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -40,16 +40,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.textMuted(context), size: 16),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Edit Profile', style: AppTextStyles.displaySmall),
+                  Text('Edit Profile',
+                      style: text24(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context)),
                 ],
               ),
             ),
@@ -75,14 +79,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   color: AppColors.accent.withOpacity(0.4),
                                   width: 3),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 'R',
-                                style: TextStyle(
-                                  fontFamily: 'PlayfairDisplay',
-                                  fontSize: 36,
+                                style: text30(
                                   fontWeight: FontWeight.w700,
-                                  color: AppColors.navy,
+                                  color: AppColors.navy(context),
+                                  context: context,
                                 ),
                               ),
                             ),
@@ -97,10 +100,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 color: AppColors.accent,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                    color: AppColors.navy, width: 2),
+                                    color: AppColors.navy(context), width: 2),
                               ),
-                              child: const Icon(Icons.camera_alt_rounded,
-                                  color: AppColors.navy, size: 14),
+                              child: Icon(Icons.camera_alt_rounded,
+                                  color: AppColors.navy(context), size: 14),
                             ),
                           ),
                         ],
@@ -110,12 +113,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     const SizedBox(height: 28),
 
                     // Form Fields
-                    _buildField('Full Name', _nameController, Icons.person_outline_rounded),
+                    _buildField(context, 'Full Name', _nameController, Icons.person_outline_rounded),
                     const SizedBox(height: 14),
-                    _buildField('Email Address', _emailController, Icons.mail_outline_rounded,
+                    _buildField(context, 'Email Address', _emailController, Icons.mail_outline_rounded,
                         keyboardType: TextInputType.emailAddress),
                     const SizedBox(height: 14),
-                    _buildField('Bio', _bioController, Icons.edit_note_rounded,
+                    _buildField(context, 'Bio', _bioController, Icons.edit_note_rounded,
                         maxLines: 3),
 
                     const SizedBox(height: 28),
@@ -127,19 +130,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onPressed: () => Navigator.pop(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.accent,
-                          foregroundColor: AppColors.navy,
+                          foregroundColor: AppColors.navy(context),
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14)),
                           elevation: 0,
                         ),
-                        child: const Text(
+                        child: Text(
                           'Save Changes',
-                          style: TextStyle(
-                            fontFamily: 'DMSans',
-                            fontSize: 15,
+                          style: text15(
                             fontWeight: FontWeight.w700,
-                            color: AppColors.navy,
+                            color: AppColors.navy(context),
+                            context: context,
                           ),
                         ),
                       ),
@@ -155,32 +157,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildField(String label, TextEditingController controller, IconData icon,
+  Widget _buildField(BuildContext context, String label, TextEditingController controller, IconData icon,
       {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 2, bottom: 6),
-          child: Text(label.toUpperCase(), style: AppTextStyles.labelMedium),
+          child: Text(label.toUpperCase(),
+              style: text12(
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMuted(context),
+                  context: context)),
         ),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.navyMid,
+            color: AppColors.navyMid(context),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.navyLight),
+            border: Border.all(color: AppColors.navyLight(context)),
           ),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
             maxLines: maxLines,
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 14,
-              color: AppColors.textPrimary,
+            style: text14(
+              color: AppColors.textPrimary(context),
+              context: context,
             ),
             decoration: InputDecoration(
-              prefixIcon: Icon(icon, color: AppColors.textMuted, size: 18),
+              prefixIcon: Icon(icon, color: AppColors.textMuted(context), size: 18),
               border: InputBorder.none,
               contentPadding:
               const EdgeInsets.symmetric(horizontal: 14, vertical: 14),

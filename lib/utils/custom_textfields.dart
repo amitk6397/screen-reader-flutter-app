@@ -36,7 +36,11 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      style: text14(fontWeight: FontWeight.w600),
+      style: text14(
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimary(context),
+        context: context,
+      ),
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
@@ -46,11 +50,15 @@ class AppTextField extends StatelessWidget {
 
       // ✅ ADD THIS (IMPORTANT)
       maxLength: maxLength,
-      cursorColor: AppColors.button,
+      cursorColor: AppColors.accent,
       decoration: InputDecoration(
         filled: true,
-        fillColor: AppColors.white,
+        fillColor: AppColors.navyMid(context),
         hintText: hintText,
+        hintStyle: text14(
+          color: AppColors.textMuted(context),
+          context: context,
+        ),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.symmetric(
@@ -70,7 +78,7 @@ class AppTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
           borderSide: const BorderSide(
-            color: AppColors.button, // 👉 your button/primary color
+            color: AppColors.accent, // 👉 your button/primary color
             width: 2,
           ),
         ),

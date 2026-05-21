@@ -22,10 +22,10 @@ void showCustomDialog(BuildContext context) {
 
               Text(
                 "Success",
-                style: TextStyle(
-                  fontSize: 20,
+                style: text20(
                   fontWeight: FontWeight.w600,
-                  fontFamily: "Poppins",
+                  color: AppColors.textPrimary(context),
+                  context: context,
                 ),
               ),
 
@@ -34,10 +34,9 @@ void showCustomDialog(BuildContext context) {
               Text(
                 "Your order has been placed successfully.",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: "Poppins",
-                  color: Colors.grey[700],
+                style: text14(
+                  color: AppColors.textSecondary(context),
+                  context: context,
                 ),
               ),
 
@@ -56,11 +55,11 @@ void showCustomDialog(BuildContext context) {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text(
+                      child: Text(
                         "Cancel",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: "Poppins",
+                        style: text14(
+                          color: AppColors.grey900,
+                          context: context,
                         ),
                       ),
                     ),
@@ -69,7 +68,7 @@ void showCustomDialog(BuildContext context) {
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: AppColors.accent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -77,9 +76,13 @@ void showCustomDialog(BuildContext context) {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text(
+                      child: Text(
                         "OK",
-                        style: TextStyle(fontFamily: "Poppins"),
+                        style: text14(
+                          color: AppColors.navy(context),
+                          fontWeight: FontWeight.w600,
+                          context: context,
+                        ),
                       ),
                     ),
                   ),
@@ -98,16 +101,23 @@ void showConfirmDialog(BuildContext context) {
 
   Get.dialog(
     AlertDialog(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.navyMid(context),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
         "Log Out",
-        style: text20(fontWeight: FontWeight.w600),
+        style: text20(
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary(context),
+          context: context,
+        ),
         textAlign: TextAlign.center,
       ),
       content: Text(
         "Are you sure you want to log out?",
-        style: text16(color: AppColors.textSecondary),
+        style: text16(
+          color: AppColors.textSecondary(context),
+          context: context,
+        ),
         textAlign: TextAlign.center,
       ),
       actionsPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -123,7 +133,7 @@ void showConfirmDialog(BuildContext context) {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  side: BorderSide(color: AppColors.textSecondary),
+                  side: BorderSide(color: AppColors.textSecondary(context)),
                 ),
                 child: Text(
                   "Cancel",

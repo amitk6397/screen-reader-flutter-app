@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 
 class PlaybackSpeedScreen extends StatefulWidget {
   const PlaybackSpeedScreen({super.key});
@@ -19,7 +19,7 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -34,16 +34,20 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.textMuted(context), size: 16),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Playback Speed', style: AppTextStyles.displaySmall),
+                  Text('Playback Speed',
+                      style: text24(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context)),
                 ],
               ),
             ),
@@ -61,7 +65,7 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 28),
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                             color: AppColors.accent.withOpacity(0.3), width: 1.5),
@@ -84,10 +88,9 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                                 : _selectedSpeed < 1.0
                                 ? 'Slower than Normal'
                                 : 'Faster than Normal',
-                            style: const TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 13,
-                              color: AppColors.textMuted,
+                            style: text13(
+                              color: AppColors.textMuted(context),
+                              context: context,
                             ),
                           ),
                           const SizedBox(height: 18),
@@ -97,7 +100,7 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                             child: SliderTheme(
                               data: SliderTheme.of(context).copyWith(
                                 activeTrackColor: AppColors.accent,
-                                inactiveTrackColor: AppColors.navyLight,
+                                inactiveTrackColor: AppColors.navyLight(context),
                                 thumbColor: AppColors.accent,
                                 overlayColor: AppColors.accent.withOpacity(0.1),
                                 trackHeight: 4,
@@ -123,7 +126,11 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                     // Preset Chips
                     Padding(
                       padding: const EdgeInsets.only(left: 2, bottom: 10),
-                      child: Text('PRESETS', style: AppTextStyles.labelMedium),
+                      child: Text('PRESETS',
+                          style: text12(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textMuted(context),
+                              context: context)),
                     ),
                     Wrap(
                       spacing: 8,
@@ -138,12 +145,12 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? AppColors.accent.withOpacity(0.15)
-                                  : AppColors.navyMid,
+                                  : AppColors.navyMid(context),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: isSelected
                                     ? AppColors.accent
-                                    : AppColors.navyLight,
+                                    : AppColors.navyLight(context),
                                 width: isSelected ? 1.5 : 1,
                               ),
                             ),
@@ -155,7 +162,7 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                                 fontWeight: FontWeight.w600,
                                 color: isSelected
                                     ? AppColors.accent
-                                    : AppColors.textMuted,
+                                    : AppColors.textMuted(context),
                               ),
                             ),
                           ),
@@ -168,7 +175,11 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
                     // Options
                     Padding(
                       padding: const EdgeInsets.only(left: 2, bottom: 10),
-                      child: Text('OPTIONS', style: AppTextStyles.labelMedium),
+                      child: Text('OPTIONS',
+                          style: text12(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textMuted(context),
+                              context: context)),
                     ),
                     _toggleTile(
                       'Remember Per Book',
@@ -203,9 +214,9 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight),
+        border: Border.all(color: AppColors.navyLight(context)),
       ),
       child: Row(
         children: [
@@ -224,17 +235,15 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 14,
+                    style: text14(
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: AppColors.textPrimary(context),
+                      context: context,
                     )),
                 Text(subtitle,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 11,
-                      color: AppColors.textMuted,
+                    style: text11(
+                      color: AppColors.textMuted(context),
+                      context: context,
                     )),
               ],
             ),
@@ -244,8 +253,8 @@ class _PlaybackSpeedScreenState extends State<PlaybackSpeedScreen> {
             onChanged: onChanged,
             activeColor: AppColors.accent,
             activeTrackColor: AppColors.accent.withOpacity(0.3),
-            inactiveTrackColor: AppColors.navyLight,
-            inactiveThumbColor: AppColors.textMuted,
+            inactiveTrackColor: AppColors.navyLight(context),
+            inactiveThumbColor: AppColors.textMuted(context),
           ),
         ],
       ),

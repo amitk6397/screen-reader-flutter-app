@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../res/app_colors.dart';
-import '../../utils/text_style.dart';
+import '../../utils/textstyle.dart';
 import '../../view_model/after_login_ctr/book_reader_controller.dart';
 
 class BookReaderScreen extends StatefulWidget {
@@ -120,12 +120,15 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(widget.book.title,
-                    style: AppTextStyles.headingSmall.copyWith(
-                        color: AppColors.textPrimary(context)),
+                    style: text16(
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary(context),
+                        context: context),
                     overflow: TextOverflow.ellipsis),
                 Text(widget.book.author,
-                    style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textMuted(context))),
+                    style: text12(
+                        color: AppColors.textMuted(context),
+                        context: context)),
               ],
             ),
           ),

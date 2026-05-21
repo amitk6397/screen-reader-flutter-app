@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:screen_reader/utils/text_style.dart';
+import 'package:screen_reader/utils/textstyle.dart';
 import '../res/app_colors.dart';
 
 
@@ -10,77 +10,72 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.navy,
+      scaffoldBackgroundColor: AppColors.primary,
       primaryColor: AppColors.accent,
       fontFamily: 'DMSans',
       colorScheme: const ColorScheme.dark(
         primary: AppColors.accent,
-        secondary: AppColors.accent2,
-        surface: AppColors.navyMid,
+        secondary: AppColors.info,
+        surface: AppColors.primary,
         error: AppColors.danger,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.navy,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.primary,
         elevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle(
+        systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
         ),
-        titleTextStyle: AppTextStyles.displaySmall,
-        iconTheme: IconThemeData(color: AppColors.textPrimary),
+        titleTextStyle: text24(
+          fontWeight: FontWeight.w700,
+          color: AppColors.grey50,
+        ),
+        iconTheme: const IconThemeData(color: AppColors.grey50),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: AppColors.navyMid,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: AppColors.primary,
         selectedItemColor: AppColors.accent,
-        unselectedItemColor: AppColors.textMuted,
+        unselectedItemColor: AppColors.grey500,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
-        selectedLabelStyle: TextStyle(
-          fontFamily: 'DMSans',
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontFamily: 'DMSans',
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-        ),
+        selectedLabelStyle: text10(fontWeight: FontWeight.w600),
+        unselectedLabelStyle: text10(fontWeight: FontWeight.w500),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.navyMid,
+        fillColor: AppColors.primary,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.navyLight, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.grey800, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.navyLight, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.grey800, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
         ),
-        hintStyle: AppTextStyles.bodyMedium,
+        hintStyle: text14(color: AppColors.grey500),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accent,
-          foregroundColor: AppColors.navy,
+          foregroundColor: AppColors.primary,
           minimumSize: const Size(double.infinity, 52),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          textStyle: AppTextStyles.buttonPrimary,
+          textStyle: text16(fontWeight: FontWeight.w700),
           elevation: 0,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.textMuted,
+          foregroundColor: AppColors.grey500,
           minimumSize: const Size(double.infinity, 50),
-          side: const BorderSide(color: AppColors.navyLight, width: 1.5),
+          side: const BorderSide(color: AppColors.grey800, width: 1.5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          textStyle: AppTextStyles.buttonSecondary,
+          textStyle: text14(fontWeight: FontWeight.w700),
         ),
       ),
     );

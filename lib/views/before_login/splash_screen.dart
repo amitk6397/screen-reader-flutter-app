@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:screen_reader/utils/textstyle.dart';
+
 import '../../res/app_colors.dart';
 import '../../routes/app_routes.dart';
-import '../../utils/text_style.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,37 +32,47 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
+
     _ringController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 2800),
     )..repeat(reverse: true);
+
     _loaderController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1800),
     )..repeat();
 
-    _logoScale = Tween<double>(begin: 0.4, end: 1.0).animate(
+    // Animations
+    _logoScale = Tween<double>(begin: 0.3, end: 1.0).animate(
       CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
     );
+
     _logoFade = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-          parent: _logoController,
-          curve: const Interval(0.0, 0.5, curve: Curves.easeIn)),
+        parent: _logoController,
+        curve: const Interval(0.0, 0.55, curve: Curves.easeIn),
+      ),
     );
+
     _textFade = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-          parent: _logoController,
-          curve: const Interval(0.5, 1.0, curve: Curves.easeIn)),
+        parent: _logoController,
+        curve: const Interval(0.45, 1.0, curve: Curves.easeIn),
+      ),
     );
-    _ringScale = Tween<double>(begin: 1.0, end: 1.05).animate(
+
+    _ringScale = Tween<double>(begin: 1.0, end: 1.08).animate(
       CurvedAnimation(parent: _ringController, curve: Curves.easeInOut),
     );
-    _loaderValue = Tween<double>(begin: -0.4, end: 1.4).animate(
+
+    _loaderValue = Tween<double>(begin: -0.5, end: 1.5).animate(
       CurvedAnimation(parent: _loaderController, curve: Curves.easeInOut),
     );
 
     _logoController.forward();
 
+    // Navigate after splash
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) Get.offNamed(AppRoutes.onboarding);
     });
@@ -83,49 +94,21 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ── Pulse rings + logo ──────────────────────────────────────────
+            // Logo with Pulse Rings
             AnimatedBuilder(
               animation: _ringController,
               builder: (_, __) {
                 return Stack(
                   alignment: Alignment.center,
                   children: [
-                    Transform.scale(
-                      scale: _ringScale.value * 1.6,
-                      child: Container(
-                        width: 160, height: 160,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: AppColors.accent.withOpacity(0.04),
-                              width: 1),
-                        ),
-                      ),
-                    ),
-                    Transform.scale(
-                      scale: _ringScale.value * 1.3,
-                      child: Container(
-                        width: 140, height: 140,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: AppColors.accent.withOpacity(0.08),
-                              width: 1),
-                        ),
-                      ),
-                    ),
-                    Transform.scale(
-                      scale: _ringScale.value,
-                      child: Container(
-                        width: 120, height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: AppColors.accent.withOpacity(0.14),
-                              width: 1),
-                        ),
-                      ),
-                    ),
+                    // Outer Ring
+                    _buildRing(scale: _ringScale.value * 1.65, opacity: 0.04),
+                    // Middle Ring
+                    _buildRing(scale: _ringScale.value * 1.32, opacity: 0.09),
+                    // Inner Ring
+                    _buildRing(scale: _ringScale.value, opacity: 0.16),
+
+                    // Logo Container
                     AnimatedBuilder(
                       animation: _logoController,
                       builder: (_, __) => FadeTransition(
@@ -133,15 +116,21 @@ class _SplashScreenState extends State<SplashScreen>
                         child: ScaleTransition(
                           scale: _logoScale,
                           child: Container(
-                            width: 84, height: 84,
+                            width: 88,
+                            height: 88,
                             decoration: BoxDecoration(
                               color: AppColors.navyMid(context),
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: BorderRadius.circular(26),
                               border: Border.all(
-                                  color: AppColors.accent, width: 2),
+                                color: AppColors.accent,
+                                width: 2.5,
+                              ),
                             ),
-                            child: const Icon(Icons.headphones_rounded,
-                                color: AppColors.accent, size: 40),
+                            child: const Icon(
+                              Icons.headphones_rounded,
+                              color: AppColors.accent,
+                              size: 42,
+                            ),
                           ),
                         ),
                       ),
@@ -151,52 +140,93 @@ class _SplashScreenState extends State<SplashScreen>
               },
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
 
-            // ── App name ────────────────────────────────────────────────────
+            // App Name
             FadeTransition(
               opacity: _textFade,
-              child: Text('Audiara',
-                  style: AppTextStyles.displayLarge.copyWith(
-                      color: AppColors.textPrimary(context))),
+              child: Text(
+                'Audiara',
+                style: text24(
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary(context),
+                  context: context,
+                ),
+              ),
             ),
+
             const SizedBox(height: 8),
+
+            // Tagline
             FadeTransition(
               opacity: _textFade,
               child: Text(
                 'Read with your ears, not your eyes',
-                style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textMuted(context)),
+                style: text16(
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textMuted(context),
+                  context: context,
+                ),
               ),
             ),
 
-            const SizedBox(height: 56),
+            const SizedBox(height: 64),
 
-            // ── Loading bar ─────────────────────────────────────────────────
+            // Loading Indicator
             FadeTransition(
               opacity: _textFade,
               child: AnimatedBuilder(
                 animation: _loaderController,
-                builder: (_, __) => SizedBox(
-                  width: 48, height: 3,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Stack(
-                      children: [
-                        Container(color: AppColors.navyLight(context)),
-                        FractionallySizedBox(
-                          alignment: Alignment(
-                              _loaderValue.value.clamp(-1.0, 1.0), 0),
-                          widthFactor: 0.4,
-                          child: Container(color: AppColors.accent),
-                        ),
-                      ],
+                builder: (_, __) {
+                  return SizedBox(
+                    width: 52,
+                    height: 4,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Stack(
+                        children: [
+                          // Background track
+                          Container(color: AppColors.navyLight(context)),
+                          // Moving highlight
+                          FractionallySizedBox(
+                            alignment: Alignment(
+                              _loaderValue.value.clamp(-1.0, 1.0),
+                              0,
+                            ),
+                            widthFactor: 0.45,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.accent,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // Helper widget for rings
+  Widget _buildRing({required double scale, required double opacity}) {
+    return Transform.scale(
+      scale: scale,
+      child: Container(
+        width: 138,
+        height: 138,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: AppColors.accent.withOpacity(opacity),
+            width: 1.2,
+          ),
         ),
       ),
     );

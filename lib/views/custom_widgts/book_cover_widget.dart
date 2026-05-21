@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../model/book_model.dart';
 import '../../res/app_colors.dart';
-import '../../utils/text_style.dart';
-
+import 'package:screen_reader/utils/textstyle.dart';
 
 // ─────────────────────────────────────────────
 // BOOK COVER WIDGET (Grid card)
@@ -15,9 +15,9 @@ class BookCoverWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.navyLight, width: 1),
+        border: Border.all(color: AppColors.navyLight(context), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,16 +25,18 @@ class BookCoverWidget extends StatelessWidget {
           // Cover art
           Expanded(
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(15),
+              ),
               child: Container(
                 color: book.coverColor,
                 width: double.infinity,
                 child: Stack(
                   children: [
-                    Center(
+                    const Center(
                       child: Icon(
                         Icons.menu_book_rounded,
-                        color: Colors.white.withOpacity(0.25),
+                        color: Colors.white24,
                         size: 52,
                       ),
                     ),
@@ -48,7 +50,8 @@ class BookCoverWidget extends StatelessWidget {
                           minHeight: 3,
                           backgroundColor: Colors.black26,
                           valueColor: const AlwaysStoppedAnimation<Color>(
-                              AppColors.accent),
+                            AppColors.accent,
+                          ),
                         ),
                       ),
                   ],
@@ -56,53 +59,69 @@ class BookCoverWidget extends StatelessWidget {
               ),
             ),
           ),
-          // Info
+
+          // Book Info
           Padding(
-            padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   book.title,
-                  style: AppTextStyles.headingSmall,
+                  style: text16(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary(context),
+                    context: context,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
-                Text(book.author,
-                    style: AppTextStyles.bodySmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
+                Text(
+                  book.author,
+                  style: text13(
+                    color: AppColors.textMuted(context),
+                    context: context,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.accentDim,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         book.genre,
-                        style: const TextStyle(
-                          fontSize: 9,
+                        style: text11(
                           color: AppColors.accent,
-                          fontFamily: 'DMSans',
                           fontWeight: FontWeight.w700,
+                          context: context,
                         ),
                       ),
                     ),
                     const Spacer(),
-                    const Icon(Icons.star_rounded,
-                        color: AppColors.accent2, size: 12),
-                    const SizedBox(width: 2),
-                    const Text('4.8',
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: AppColors.textMuted,
-                            fontFamily: 'DMSans',
-                            fontWeight: FontWeight.w600)),
+                    const Icon(
+                      Icons.star_rounded,
+                      color: AppColors.accent,
+                      size: 14,
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      '4.8',
+                      style: text12(
+                        color: AppColors.textMuted(context),
+                        fontWeight: FontWeight.w600,
+                        context: context,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -126,59 +145,81 @@ class FeaturedCardWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.navyLight,
+        color: AppColors.navyLight(context),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-            color: AppColors.accent.withOpacity(0.18), width: 1),
+        border: Border.all(color: AppColors.accent.withOpacity(0.18), width: 1),
       ),
       child: Row(
         children: [
           // Cover
           Container(
-            width: 60,
-            height: 80,
+            width: 64,
+            height: 85,
             decoration: BoxDecoration(
               color: book.coverColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.menu_book_rounded,
-                color: Colors.white60, size: 30),
+            child: const Icon(
+              Icons.menu_book_rounded,
+              color: Colors.white60,
+              size: 32,
+            ),
           ),
 
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
 
           // Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(book.genre.toUpperCase(),
-                    style: AppTextStyles.labelMedium.copyWith(
-                        color: AppColors.accent, fontSize: 10)),
+                Text(
+                  book.genre.toUpperCase(),
+                  style: text12(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.w700,
+                    context: context,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  book.title,
+                  style: text18(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary(context),
+                    context: context,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 4),
-                Text(book.title, style: AppTextStyles.headingMedium),
-                const SizedBox(height: 2),
-                Text('${book.author} · ${book.currentChapter}',
-                    style: AppTextStyles.bodySmall),
-                const SizedBox(height: 10),
+                Text(
+                  '${book.author} • ${book.currentChapter}',
+                  style: text14(
+                    color: AppColors.textMuted(context),
+                    context: context,
+                  ),
+                ),
+                const SizedBox(height: 12),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
                     value: book.progress,
                     minHeight: 4,
-                    backgroundColor: AppColors.navyMid,
-                    valueColor:
-                    const AlwaysStoppedAnimation<Color>(AppColors.accent),
+                    backgroundColor: AppColors.navyMid(context),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppColors.accent,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   '${(book.progress * 100).toInt()}% complete',
-                  style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors.accent,
-                      fontFamily: 'DMSans',
-                      fontWeight: FontWeight.w600),
+                  style: text11(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.w600,
+                    context: context,
+                  ),
                 ),
               ],
             ),
@@ -186,16 +227,19 @@ class FeaturedCardWidget extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          // Play
+          // Play Button
           Container(
-            width: 44,
-            height: 44,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               color: AppColors.accent,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(Icons.play_arrow_rounded,
-                color: AppColors.navy, size: 26),
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.black,
+              size: 28,
+            ),
           ),
         ],
       ),
@@ -210,28 +254,30 @@ class SectionHeaderWidget extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAll;
 
-  const SectionHeaderWidget({
-    super.key,
-    required this.title,
-    this.onSeeAll,
-  });
+  const SectionHeaderWidget({super.key, required this.title, this.onSeeAll});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(title, style: AppTextStyles.headingMedium),
+        Text(
+          title,
+          style: text20(
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary(context),
+            context: context,
+          ),
+        ),
         const Spacer(),
         if (onSeeAll != null)
           GestureDetector(
             onTap: onSeeAll,
-            child: const Text(
+            child: Text(
               'See all',
-              style: TextStyle(
-                fontFamily: 'DMSans',
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+              style: text14(
                 color: AppColors.accent,
+                fontWeight: FontWeight.w600,
+                context: context,
               ),
             ),
           ),

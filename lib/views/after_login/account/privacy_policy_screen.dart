@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 
 class PrivacyScreen extends StatefulWidget {
   const PrivacyScreen({super.key});
@@ -19,7 +19,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -33,16 +33,20 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.textMuted(context), size: 16),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Privacy', style: AppTextStyles.displaySmall),
+                  Text('Privacy',
+                      style: text24(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context)),
                 ],
               ),
             ),
@@ -85,7 +89,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
 
                     const SizedBox(height: 20),
 
-                    _sectionLabel('Profile'),
+                    _sectionLabel(context, 'Profile'),
                     const SizedBox(height: 8),
                     _toggleTile(
                       'Public Profile',
@@ -107,7 +111,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
 
                     const SizedBox(height: 20),
 
-                    _sectionLabel('Data & Analytics'),
+                    _sectionLabel(context, 'Data & Analytics'),
                     const SizedBox(height: 8),
                     _toggleTile(
                       'Usage Analytics',
@@ -131,14 +135,14 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
                       'Personalized Ads',
                       'Show ads based on your interests',
                       Icons.ads_click_rounded,
-                      AppColors.textMuted,
+                      AppColors.textMuted(context),
                       _personalizedAds,
                           (v) => setState(() => _personalizedAds = v),
                     ),
 
                     const SizedBox(height: 20),
 
-                    _sectionLabel('Legal'),
+                    _sectionLabel(context, 'Legal'),
                     const SizedBox(height: 8),
                     _linkTile('Privacy Policy', Icons.privacy_tip_outlined,
                         AppColors.info),
@@ -161,9 +165,13 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
     );
   }
 
-  Widget _sectionLabel(String text) => Padding(
+  Widget _sectionLabel(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(left: 2, bottom: 2),
-    child: Text(text.toUpperCase(), style: AppTextStyles.labelMedium),
+    child: Text(text.toUpperCase(),
+        style: text12(
+            fontWeight: FontWeight.w700,
+            color: AppColors.textMuted(context),
+            context: context)),
   );
 
   Widget _toggleTile(String title, String subtitle, IconData icon, Color color,
@@ -171,9 +179,9 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight),
+        border: Border.all(color: AppColors.navyLight(context)),
       ),
       child: Row(
         children: [
@@ -192,17 +200,15 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 14,
+                    style: text14(
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: AppColors.textPrimary(context),
+                      context: context,
                     )),
                 Text(subtitle,
-                    style: const TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 11,
-                      color: AppColors.textMuted,
+                    style: text11(
+                      color: AppColors.textMuted(context),
+                      context: context,
                     )),
               ],
             ),
@@ -212,8 +218,8 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
             onChanged: onChanged,
             activeColor: color,
             activeTrackColor: color.withOpacity(0.3),
-            inactiveTrackColor: AppColors.navyLight,
-            inactiveThumbColor: AppColors.textMuted,
+            inactiveTrackColor: AppColors.navyLight(context),
+            inactiveThumbColor: AppColors.textMuted(context),
           ),
         ],
       ),
@@ -225,9 +231,9 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight),
+        border: Border.all(color: AppColors.navyLight(context)),
       ),
       child: Row(
         children: [
@@ -243,15 +249,14 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(label,
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 14,
+                style: text14(
                   fontWeight: FontWeight.w500,
-                  color: danger ? AppColors.danger : AppColors.textPrimary,
+                  color: danger ? AppColors.danger : AppColors.textPrimary(context),
+                  context: context,
                 )),
           ),
           Icon(Icons.chevron_right_rounded,
-              color: AppColors.textMuted, size: 18),
+              color: AppColors.textMuted(context), size: 18),
         ],
       ),
     );

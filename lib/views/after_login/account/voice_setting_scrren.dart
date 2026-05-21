@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
-import '../../../utils/text_style.dart';
+import '../../../utils/textstyle.dart';
 
 class VoiceSettingsScreen extends StatefulWidget {
   const VoiceSettingsScreen({super.key});
@@ -26,7 +26,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -41,16 +41,20 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.textMuted(context), size: 16),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Voice Settings', style: AppTextStyles.displaySmall),
+                  Text('Voice Settings',
+                      style: text24(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary(context),
+                          context: context)),
                 ],
               ),
             ),
@@ -64,7 +68,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Voice Selection
-                    _sectionLabel('Select Voice'),
+                    _sectionLabel(context, 'Select Voice'),
                     const SizedBox(height: 8),
                     ...List.generate(_voices.length, (i) {
                       final v = _voices[i];
@@ -78,12 +82,12 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? AppColors.accent.withOpacity(0.08)
-                                : AppColors.navyMid,
+                                : AppColors.navyMid(context),
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
                               color: isSelected
                                   ? AppColors.accent
-                                  : AppColors.navyLight,
+                                  : AppColors.navyLight(context),
                               width: isSelected ? 1.5 : 1,
                             ),
                           ),
@@ -111,13 +115,12 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
                                           fontWeight: FontWeight.w600,
                                           color: isSelected
                                               ? AppColors.accent
-                                              : AppColors.textPrimary,
+                                              : AppColors.textPrimary(context),
                                         )),
                                     Text(v['type'],
-                                        style: const TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 11,
-                                          color: AppColors.textMuted,
+                                        style: text11(
+                                          color: AppColors.textMuted(context),
+                                          context: context,
                                         )),
                                   ],
                                 ),
@@ -134,7 +137,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
                     const SizedBox(height: 20),
 
                     // Pitch
-                    _sectionLabel('Voice Pitch'),
+                    _sectionLabel(context, 'Voice Pitch'),
                     const SizedBox(height: 8),
                     _sliderCard(
                       icon: Icons.graphic_eq_rounded,
@@ -149,7 +152,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
                     const SizedBox(height: 14),
 
                     // Volume
-                    _sectionLabel('Volume'),
+                    _sectionLabel(context, 'Volume'),
                     const SizedBox(height: 8),
                     _sliderCard(
                       icon: Icons.volume_up_rounded,
@@ -164,7 +167,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
                     const SizedBox(height: 20),
 
                     // Toggles
-                    _sectionLabel('Audio Enhancements'),
+                    _sectionLabel(context, 'Audio Enhancements'),
                     const SizedBox(height: 8),
                     _toggleCard('Enhance Audio Quality', Icons.auto_awesome_rounded,
                         AppColors.coverTeal, _enhanceAudio,
@@ -185,9 +188,13 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
     );
   }
 
-  Widget _sectionLabel(String text) => Padding(
+  Widget _sectionLabel(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(left: 2, bottom: 2),
-    child: Text(text.toUpperCase(), style: AppTextStyles.labelMedium),
+    child: Text(text.toUpperCase(),
+        style: text12(
+            fontWeight: FontWeight.w700,
+            color: AppColors.textMuted(context),
+            context: context)),
   );
 
   Widget _sliderCard({
@@ -202,9 +209,9 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight),
+        border: Border.all(color: AppColors.navyLight(context)),
       ),
       child: Row(
         children: [
@@ -222,7 +229,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
             child: SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 activeTrackColor: AppColors.accent,
-                inactiveTrackColor: AppColors.navyLight,
+                inactiveTrackColor: AppColors.navyLight(context),
                 thumbColor: AppColors.accent,
                 overlayColor: AppColors.accent.withOpacity(0.1),
                 trackHeight: 3,
@@ -236,11 +243,10 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
             ),
           ),
           Text(label,
-              style: const TextStyle(
-                fontFamily: 'DMSans',
-                fontSize: 13,
+              style: text13(
                 fontWeight: FontWeight.w600,
                 color: AppColors.accent,
+                context: context,
               )),
         ],
       ),
@@ -252,9 +258,9 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.navyMid,
+        color: AppColors.navyMid(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.navyLight),
+        border: Border.all(color: AppColors.navyLight(context)),
       ),
       child: Row(
         children: [
@@ -270,11 +276,10 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(label,
-                style: const TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 14,
+                style: text14(
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: AppColors.textPrimary(context),
+                  context: context,
                 )),
           ),
           Switch(
@@ -282,8 +287,8 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
             onChanged: onChanged,
             activeColor: AppColors.accent,
             activeTrackColor: AppColors.accent.withOpacity(0.3),
-            inactiveTrackColor: AppColors.navyLight,
-            inactiveThumbColor: AppColors.textMuted,
+            inactiveTrackColor: AppColors.navyLight(context),
+            inactiveThumbColor: AppColors.textMuted(context),
           ),
         ],
       ),
