@@ -1,7 +1,8 @@
+// lib/views/after_login/account/font_size_screen.dart
+
 import 'package:flutter/material.dart';
 import '../../../res/app_colors.dart';
 import '../../../utils/text_style.dart';
-
 
 class FontSizeScreen extends StatefulWidget {
   const FontSizeScreen({super.key});
@@ -11,25 +12,26 @@ class FontSizeScreen extends StatefulWidget {
 }
 
 class _FontSizeScreenState extends State<FontSizeScreen> {
-  double _fontSize = 16;
-  String _fontFamily = 'DMSans';
-  bool _boldText = false;
+  double _fontSize    = 16;
+  String _fontFamily  = 'DMSans';
+  bool   _boldText    = false;
   double _lineSpacing = 1.5;
 
   final List<Map<String, String>> _fonts = [
-    {'name': 'DMSans', 'label': 'DM Sans'},
+    {'name': 'DMSans',          'label': 'DM Sans'},
     {'name': 'PlayfairDisplay', 'label': 'Playfair'},
-    {'name': 'Georgia', 'label': 'Georgia'},
-    {'name': 'Courier', 'label': 'Courier'},
+    {'name': 'Georgia',         'label': 'Georgia'},
+    {'name': 'Courier',         'label': 'Courier'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
+      backgroundColor: AppColors.navy(context),
       body: SafeArea(
         child: Column(
           children: [
+            // ── Header ──────────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
               child: Row(
@@ -37,19 +39,18 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      width: 38,
-                      height: 38,
+                      width: 38, height: 38,
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.textMuted(context), size: 16),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Font Size', style: AppTextStyles.displaySmall),
+                  Text('Font Size', style: AppTextStyles.displaySmallOf(context)),
                 ],
               ),
             ),
@@ -62,31 +63,31 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Preview Card
+                    // ── Preview Card ─────────────────────────────────────────
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(
-                            color: AppColors.coverTeal.withOpacity(0.3), width: 1.5),
+                            color: AppColors.coverTeal.withOpacity(0.3),
+                            width: 1.5),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'PREVIEW',
-                            style: AppTextStyles.labelMedium,
-                          ),
+                          Text('PREVIEW', style: AppTextStyles.labelMediumOf(context)),
                           const SizedBox(height: 12),
                           Text(
                             'The quick brown fox jumps over the lazy dog.',
                             style: TextStyle(
                               fontFamily: _fontFamily,
                               fontSize: _fontSize,
-                              fontWeight: _boldText ? FontWeight.w700 : FontWeight.w400,
-                              color: AppColors.textPrimary,
+                              fontWeight: _boldText
+                                  ? FontWeight.w700
+                                  : FontWeight.w400,
+                              color: AppColors.textPrimary(context),
                               height: _lineSpacing,
                             ),
                           ),
@@ -96,7 +97,7 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                             style: TextStyle(
                               fontFamily: _fontFamily,
                               fontSize: _fontSize * 0.75,
-                              color: AppColors.textMuted,
+                              color: AppColors.textMuted(context),
                               height: _lineSpacing,
                             ),
                           ),
@@ -106,102 +107,54 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Font Size
-                    _sectionLabel('Text Size'),
+                    // ── Text Size ────────────────────────────────────────────
+                    _sectionLabel(context, 'Text Size'),
                     const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.navyMid,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.navyLight),
+                    _sliderCard(
+                      context,
+                      icon: Icons.text_fields_rounded,
+                      color: AppColors.coverTeal,
+                      label: '${_fontSize.round()}',
+                      labelColor: AppColors.coverTeal,
+                      child: Slider(
+                        value: _fontSize,
+                        min: 12, max: 28, divisions: 16,
+                        onChanged: (v) =>
+                            setState(() => _fontSize = v.roundToDouble()),
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.text_fields_rounded,
-                              color: AppColors.coverTeal, size: 18),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: SliderTheme(
-                              data: SliderTheme.of(context).copyWith(
-                                activeTrackColor: AppColors.coverTeal,
-                                inactiveTrackColor: AppColors.navyLight,
-                                thumbColor: AppColors.coverTeal,
-                                overlayColor: AppColors.coverTeal.withOpacity(0.1),
-                                trackHeight: 3,
-                              ),
-                              child: Slider(
-                                value: _fontSize,
-                                min: 12,
-                                max: 28,
-                                divisions: 16,
-                                onChanged: (v) =>
-                                    setState(() => _fontSize = v.roundToDouble()),
-                              ),
-                            ),
-                          ),
-                          Text('${_fontSize.round()}',
-                              style: const TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.coverTeal,
-                              )),
-                        ],
-                      ),
+                      activeTrack: AppColors.coverTeal,
+                      inactiveTrack: AppColors.navyLight(context),
+                      thumb: AppColors.coverTeal,
+                      overlay: AppColors.coverTeal.withOpacity(0.1),
                     ),
 
                     const SizedBox(height: 14),
 
-                    // Line Spacing
-                    _sectionLabel('Line Spacing'),
+                    // ── Line Spacing ──────────────────────────────────────────
+                    _sectionLabel(context, 'Line Spacing'),
                     const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.navyMid,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.navyLight),
+                    _sliderCard(
+                      context,
+                      icon: Icons.format_line_spacing_rounded,
+                      color: AppColors.coverBlue,
+                      label: _lineSpacing.toStringAsFixed(1),
+                      labelColor: AppColors.coverBlue,
+                      child: Slider(
+                        value: _lineSpacing,
+                        min: 1.0, max: 2.5, divisions: 15,
+                        onChanged: (v) => setState(() =>
+                        _lineSpacing = double.parse(v.toStringAsFixed(1))),
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.format_line_spacing_rounded,
-                              color: AppColors.coverBlue, size: 18),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: SliderTheme(
-                              data: SliderTheme.of(context).copyWith(
-                                activeTrackColor: AppColors.coverBlue,
-                                inactiveTrackColor: AppColors.navyLight,
-                                thumbColor: AppColors.coverBlue,
-                                overlayColor: AppColors.coverBlue.withOpacity(0.1),
-                                trackHeight: 3,
-                              ),
-                              child: Slider(
-                                value: _lineSpacing,
-                                min: 1.0,
-                                max: 2.5,
-                                divisions: 15,
-                                onChanged: (v) => setState(() =>
-                                _lineSpacing = double.parse(v.toStringAsFixed(1))),
-                              ),
-                            ),
-                          ),
-                          Text(_lineSpacing.toStringAsFixed(1),
-                              style: const TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.coverBlue,
-                              )),
-                        ],
-                      ),
+                      activeTrack: AppColors.coverBlue,
+                      inactiveTrack: AppColors.navyLight(context),
+                      thumb: AppColors.coverBlue,
+                      overlay: AppColors.coverBlue.withOpacity(0.1),
                     ),
 
                     const SizedBox(height: 20),
 
-                    // Font Family
-                    _sectionLabel('Font Style'),
+                    // ── Font Style ────────────────────────────────────────────
+                    _sectionLabel(context, 'Font Style'),
                     const SizedBox(height: 8),
                     GridView.builder(
                       shrinkWrap: true,
@@ -224,12 +177,12 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? AppColors.coverTeal.withOpacity(0.1)
-                                  : AppColors.navyMid,
+                                  : AppColors.navyMid(context),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: isSelected
                                     ? AppColors.coverTeal
-                                    : AppColors.navyLight,
+                                    : AppColors.navyLight(context),
                                 width: isSelected ? 1.5 : 1,
                               ),
                             ),
@@ -242,7 +195,7 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                                   fontWeight: FontWeight.w500,
                                   color: isSelected
                                       ? AppColors.coverTeal
-                                      : AppColors.textPrimary,
+                                      : AppColors.textPrimary(context),
                                 ),
                               ),
                             ),
@@ -253,20 +206,19 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
 
                     const SizedBox(height: 14),
 
-                    // Bold Toggle
+                    // ── Bold Toggle ───────────────────────────────────────────
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 12),
                       decoration: BoxDecoration(
-                        color: AppColors.navyMid,
+                        color: AppColors.navyMid(context),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.navyLight),
+                        border: Border.all(color: AppColors.navyLight(context)),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: 38,
-                            height: 38,
+                            width: 38, height: 38,
                             decoration: BoxDecoration(
                               color: AppColors.warning.withOpacity(0.15),
                               borderRadius: BorderRadius.circular(10),
@@ -275,22 +227,25 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
                                 color: AppColors.warning, size: 20),
                           ),
                           const SizedBox(width: 12),
-                          const Expanded(
-                            child: Text('Bold Text',
-                                style: TextStyle(
-                                  fontFamily: 'DMSans',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.textPrimary,
-                                )),
+                          Expanded(
+                            child: Text(
+                              'Bold Text',
+                              style: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textPrimary(context),
+                              ),
+                            ),
                           ),
                           Switch(
                             value: _boldText,
                             onChanged: (v) => setState(() => _boldText = v),
                             activeColor: AppColors.warning,
-                            activeTrackColor: AppColors.warning.withOpacity(0.3),
-                            inactiveTrackColor: AppColors.navyLight,
-                            inactiveThumbColor: AppColors.textMuted,
+                            activeTrackColor:
+                            AppColors.warning.withOpacity(0.3),
+                            inactiveTrackColor: AppColors.navyLight(context),
+                            inactiveThumbColor: AppColors.textMuted(context),
                           ),
                         ],
                       ),
@@ -307,8 +262,57 @@ class _FontSizeScreenState extends State<FontSizeScreen> {
     );
   }
 
-  Widget _sectionLabel(String text) => Padding(
+  Widget _sectionLabel(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(left: 2, bottom: 2),
-    child: Text(text.toUpperCase(), style: AppTextStyles.labelMedium),
+    child: Text(text.toUpperCase(), style: AppTextStyles.labelMediumOf(context)),
   );
+
+  Widget _sliderCard(
+      BuildContext context, {
+        required IconData icon,
+        required Color color,
+        required String label,
+        required Color labelColor,
+        required Widget child,
+        required Color activeTrack,
+        required Color inactiveTrack,
+        required Color thumb,
+        required Color overlay,
+      }) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
+      decoration: BoxDecoration(
+        color: AppColors.navyMid(context),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.navyLight(context)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                activeTrackColor: activeTrack,
+                inactiveTrackColor: inactiveTrack,
+                thumbColor: thumb,
+                overlayColor: overlay,
+                trackHeight: 3,
+              ),
+              child: child,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'DMSans',
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: labelColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
